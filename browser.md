@@ -7,4 +7,5 @@
 - 组合Composite元素（组合层）
 - 执行JS并且进行垃圾回收
 
-[see](https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/)
+see：
+[https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/](https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/)
