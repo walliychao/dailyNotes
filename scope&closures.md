@@ -69,10 +69,10 @@
   
   ``function return fn: 将函数引用传到作用域外``
   
-  #### 循环+闭包
+  #### 循环&闭包
   
   - 添加匿名函数作为闭包
-  ``
+  ```
     for (var i=1; i<=5; i++) {
       (function(){
         var j = i;
@@ -81,8 +81,8 @@
         }, j*1000 );
       })();
     }
-  ``
-  ``
+  ```
+  ```
     for (var i=1; i<=5; i++) {
       (function(j){
         setTimeout( function timer(){
@@ -90,24 +90,24 @@
         }, j*1000 );
       })( i );
     }
-  ``
+  ```
   
   - 使用**let**, 创造block作用域
   
-  ``
+  ```
     for (var i=1; i<=5; i++) {
       let j = i; // yay, block-scope for closure!
       setTimeout( function timer(){
         console.log( j );
       }, j*1000 );
     }
-``
-``
+```
+```
   for (let i=1; i<=5; i++) {
     setTimeout( function timer(){
       console.log( i );
     }, i*1000 );
   }
-``
+```
 
 #### js Module
