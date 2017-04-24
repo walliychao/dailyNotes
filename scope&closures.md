@@ -69,9 +69,10 @@
   
   ``function return fn: 将函数引用传到作用域外``
   
-  #### 循环&闭包
+  #### 循环+闭包
   
   - 添加匿名函数作为闭包
+  
   ```
     for (var i=1; i<=5; i++) {
       (function(){
@@ -110,4 +111,32 @@
   }
 ```
 
-#### js Module
+### js 模块(Module)
+
+- 简单原型
+
+```
+  function CoolModule() {
+    var something = "cool";
+    var another = [1, 2, 3];
+
+    function doSomething() {
+      console.log( something );
+    }
+
+    function doAnother() {
+      console.log( another.join( " ! " ) );
+    }
+
+    return {
+      doSomething: doSomething,
+      doAnother: doAnother
+    };
+  }
+
+  var foo = CoolModule();
+
+  foo.doSomething(); // cool
+  foo.doAnother(); // 1 ! 2 ! 3
+```
+
