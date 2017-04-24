@@ -62,3 +62,52 @@
 只有函数声明会提升，函数表达式不会。且函数声明比变量声明更高。
 
 重复的变量声明，之后的会被忽略；重复的函数声明会覆盖前面的声明。
+
+### 闭包
+
+  闭包就是一个函数能够在它的词法作用域之外记忆并且访问它的词法作用域内容。
+  
+  ``function return fn: 将函数引用传到作用域外``
+  
+  #### 循环+闭包
+  
+  - 添加匿名函数作为闭包
+  ``
+    for (var i=1; i<=5; i++) {
+      (function(){
+        var j = i;
+        setTimeout( function timer(){
+          console.log( j );
+        }, j*1000 );
+      })();
+    }
+  ``
+  ``
+    for (var i=1; i<=5; i++) {
+      (function(j){
+        setTimeout( function timer(){
+          console.log( j );
+        }, j*1000 );
+      })( i );
+    }
+  ``
+  
+  - 使用**let**, 创造block作用域
+  
+  ``
+    for (var i=1; i<=5; i++) {
+      let j = i; // yay, block-scope for closure!
+      setTimeout( function timer(){
+        console.log( j );
+      }, j*1000 );
+    }
+``
+``
+  for (let i=1; i<=5; i++) {
+    setTimeout( function timer(){
+      console.log( i );
+    }, i*1000 );
+  }
+``
+
+#### js Module
