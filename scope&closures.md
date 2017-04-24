@@ -144,7 +144,7 @@
     1. 要有一个外部的闭包函数，并且必须至少被执行一次（每次返回一个新的模块实例）。
     
     2. 闭包函数必须至少返回一个内部函数，因此形成闭包，修改闭包函数内部的私有状态。
-    
+ 
 单例模式的声明和执行方法：
 
 ```
@@ -199,3 +199,74 @@
   foo.change();
   foo.identify(); // FOO MODULE
 ```
+
+- 现代模块（类requirejs）
+
+requirejs demo:
+
+```
+var MyModules = (function Manager() {
+	var modules = {};
+
+	function define(name, deps, impl) {
+		for (var i=0; i<deps.length; i++) {
+			deps[i] = modules[deps[i]];
+		}
+		modules[name] = impl.apply( impl, deps );
+	}
+
+	function get(name) {
+		return modules[name];
+	}
+
+	return {
+		define: define,
+		get: get
+	};
+})();
+```
+
+模块声明及执行方式：
+
+```
+MyModules.define( "bar", [], function(){
+	function hello(who) {
+		return "Let me introduce: " + who;
+	}
+
+	return {
+		hello: hello
+	};
+} );
+
+MyModules.define( "foo", ["bar"], function(bar){
+	var hungry = "hippo";
+
+	function awesome() {
+		console.log( bar.hello( hungry ).toUpperCase() );
+	}
+
+	return {
+		awesome: awesome
+	};
+} );
+
+var bar = MyModules.get( "bar" );
+var foo = MyModules.get( "foo" );
+
+console.log(
+	bar.hello( "hippo" )
+); // Let me introduce: hippo
+
+foo.awesome(); // LET ME INTRODUCE: HIPPO
+```
+
+- ES6 模块
+
+ES6把单个文件视为一个的模块，它并没有inline模式，模块**必须**定义在独立的文件中。
+
+**注意：**
+
+- 基于函数的JS模块是运行时的（编译器并不解析模块），即可以在定义后修改模块的API。
+
+- 相反的，ES6的模块是静态的（编译时解析、不能扩展），如果之后实例引用了定义时没有的API，会报引用错误。
