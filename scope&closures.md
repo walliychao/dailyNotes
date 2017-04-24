@@ -139,6 +139,63 @@
   foo.doSomething(); // cool
   foo.doAnother(); // 1 ! 2 ! 3
 ```
-  构成模块的必要条件：
+构成模块的必要条件：
+  
     1. 要有一个外部的闭包函数，并且必须至少被执行一次（每次返回一个新的模块实例）。
+    
     2. 闭包函数必须至少返回一个内部函数，因此形成闭包，修改闭包函数内部的私有状态。
+    
+单例模式的声明和执行方法：
+
+```
+  var foo = (function CoolModule() {
+    var something = "cool";
+    var another = [1, 2, 3];
+
+    function doSomething() {
+      console.log( something );
+    }
+
+    function doAnother() {
+      console.log( another.join( " ! " ) );
+    }
+
+    return {
+      doSomething: doSomething,
+      doAnother: doAnother
+    };
+  })();
+
+  foo.doSomething(); // cool
+  foo.doAnother(); // 1 ! 2 ! 3
+```
+
+内部引用返回的api，方便之后动态的修改：
+
+```
+  var foo = (function CoolModule(id) {
+    function change() {
+      // modifying the public API
+      publicAPI.identify = identify2;
+    }
+
+    function identify1() {
+      console.log( id );
+    }
+
+    function identify2() {
+      console.log( id.toUpperCase() );
+    }
+
+    var publicAPI = {
+      change: change,
+      identify: identify1
+    };
+
+    return publicAPI;
+  })( "foo module" );
+
+  foo.identify(); // foo module
+  foo.change();
+  foo.identify(); // FOO MODULE
+```
