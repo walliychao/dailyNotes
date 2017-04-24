@@ -73,200 +73,200 @@
   
 - 添加匿名函数作为闭包
   
-  ```
-    for (var i=1; i<=5; i++) {
-      (function(){
-        var j = i;
-        setTimeout( function timer(){
-          console.log( j );
-        }, j*1000 );
-      })();
-    }
-  ```
-  ```
-    for (var i=1; i<=5; i++) {
-      (function(j){
-        setTimeout( function timer(){
-          console.log( j );
-        }, j*1000 );
-      })( i );
-    }
-  ```
+	```
+	    for (var i=1; i<=5; i++) {
+	      (function(){
+		var j = i;
+		setTimeout( function timer(){
+		  console.log( j );
+		}, j*1000 );
+	      })();
+	    }
+	  ```
+	  ```
+	    for (var i=1; i<=5; i++) {
+	      (function(j){
+		setTimeout( function timer(){
+		  console.log( j );
+		}, j*1000 );
+	      })( i );
+	    }
+	  ```
   
  - 使用**let**, 创造block作用域
   
-  ```
-    for (var i=1; i<=5; i++) {
-      let j = i; // yay, block-scope for closure!
-      setTimeout( function timer(){
-        console.log( j );
-      }, j*1000 );
-    }
-```
-```
-  for (let i=1; i<=5; i++) {
-    setTimeout( function timer(){
-      console.log( i );
-    }, i*1000 );
-  }
-```
+	 ```
+	    for (var i=1; i<=5; i++) {
+	      let j = i; // yay, block-scope for closure!
+	      setTimeout( function timer(){
+		console.log( j );
+	      }, j*1000 );
+	    }
+	```
+	```
+	  for (let i=1; i<=5; i++) {
+	    setTimeout( function timer(){
+	      console.log( i );
+	    }, i*1000 );
+	  }
+	```
 
 ### js 模块(Module)
 
 - 简单原型
 
-```
-  function CoolModule() {
-    var something = "cool";
-    var another = [1, 2, 3];
+	```
+	  function CoolModule() {
+	    var something = "cool";
+	    var another = [1, 2, 3];
 
-    function doSomething() {
-      console.log( something );
-    }
+	    function doSomething() {
+	      console.log( something );
+	    }
 
-    function doAnother() {
-      console.log( another.join( " ! " ) );
-    }
+	    function doAnother() {
+	      console.log( another.join( " ! " ) );
+	    }
 
-    return {
-      doSomething: doSomething,
-      doAnother: doAnother
-    };
-  }
+	    return {
+	      doSomething: doSomething,
+	      doAnother: doAnother
+	    };
+	  }
 
-  var foo = CoolModule();
+	  var foo = CoolModule();
 
-  foo.doSomething(); // cool
-  foo.doAnother(); // 1 ! 2 ! 3
-```
-构成模块的必要条件：
-  
-    1. 要有一个外部的闭包函数，并且必须至少被执行一次（每次返回一个新的模块实例）。
-    
-    2. 闭包函数必须至少返回一个内部函数，因此形成闭包，修改闭包函数内部的私有状态。
+	  foo.doSomething(); // cool
+	  foo.doAnother(); // 1 ! 2 ! 3
+	```
+	构成模块的必要条件：
+
+	    1. 要有一个外部的闭包函数，并且必须至少被执行一次（每次返回一个新的模块实例）。
+
+	    2. 闭包函数必须至少返回一个内部函数，因此形成闭包，修改闭包函数内部的私有状态。
  
-单例模式的声明和执行方法：
+	单例模式的声明和执行方法：
 
-```
-  var foo = (function CoolModule() {
-    var something = "cool";
-    var another = [1, 2, 3];
+	```
+	  var foo = (function CoolModule() {
+	    var something = "cool";
+	    var another = [1, 2, 3];
 
-    function doSomething() {
-      console.log( something );
-    }
+	    function doSomething() {
+	      console.log( something );
+	    }
 
-    function doAnother() {
-      console.log( another.join( " ! " ) );
-    }
+	    function doAnother() {
+	      console.log( another.join( " ! " ) );
+	    }
 
-    return {
-      doSomething: doSomething,
-      doAnother: doAnother
-    };
-  })();
+	    return {
+	      doSomething: doSomething,
+	      doAnother: doAnother
+	    };
+	  })();
 
-  foo.doSomething(); // cool
-  foo.doAnother(); // 1 ! 2 ! 3
-```
+	  foo.doSomething(); // cool
+	  foo.doAnother(); // 1 ! 2 ! 3
+	```
 
-内部引用返回的api，方便之后动态的修改：
+	内部引用返回的api，方便之后动态的修改：
 
-```
-  var foo = (function CoolModule(id) {
-    function change() {
-      // modifying the public API
-      publicAPI.identify = identify2;
-    }
+	```
+	  var foo = (function CoolModule(id) {
+	    function change() {
+	      // modifying the public API
+	      publicAPI.identify = identify2;
+	    }
 
-    function identify1() {
-      console.log( id );
-    }
+	    function identify1() {
+	      console.log( id );
+	    }
 
-    function identify2() {
-      console.log( id.toUpperCase() );
-    }
+	    function identify2() {
+	      console.log( id.toUpperCase() );
+	    }
 
-    var publicAPI = {
-      change: change,
-      identify: identify1
-    };
+	    var publicAPI = {
+	      change: change,
+	      identify: identify1
+	    };
 
-    return publicAPI;
-  })( "foo module" );
+	    return publicAPI;
+	  })( "foo module" );
 
-  foo.identify(); // foo module
-  foo.change();
-  foo.identify(); // FOO MODULE
-```
+	  foo.identify(); // foo module
+	  foo.change();
+	  foo.identify(); // FOO MODULE
+	```
 
 - 现代模块（类requirejs）
 
-requirejs demo:
+	requirejs demo:
 
-```
-var MyModules = (function Manager() {
-	var modules = {};
+	```
+	var MyModules = (function Manager() {
+		var modules = {};
 
-	function define(name, deps, impl) {
-		for (var i=0; i<deps.length; i++) {
-			deps[i] = modules[deps[i]];
+		function define(name, deps, impl) {
+			for (var i=0; i<deps.length; i++) {
+				deps[i] = modules[deps[i]];
+			}
+			modules[name] = impl.apply( impl, deps );
 		}
-		modules[name] = impl.apply( impl, deps );
-	}
 
-	function get(name) {
-		return modules[name];
-	}
+		function get(name) {
+			return modules[name];
+		}
 
-	return {
-		define: define,
-		get: get
-	};
-})();
-```
+		return {
+			define: define,
+			get: get
+		};
+	})();
+	```
 
-模块声明及执行方式：
+	模块声明及执行方式：
 
-```
-MyModules.define( "bar", [], function(){
-	function hello(who) {
-		return "Let me introduce: " + who;
-	}
+	```
+	MyModules.define( "bar", [], function(){
+		function hello(who) {
+			return "Let me introduce: " + who;
+		}
 
-	return {
-		hello: hello
-	};
-} );
+		return {
+			hello: hello
+		};
+	} );
 
-MyModules.define( "foo", ["bar"], function(bar){
-	var hungry = "hippo";
+	MyModules.define( "foo", ["bar"], function(bar){
+		var hungry = "hippo";
 
-	function awesome() {
-		console.log( bar.hello( hungry ).toUpperCase() );
-	}
+		function awesome() {
+			console.log( bar.hello( hungry ).toUpperCase() );
+		}
 
-	return {
-		awesome: awesome
-	};
-} );
+		return {
+			awesome: awesome
+		};
+	} );
 
-var bar = MyModules.get( "bar" );
-var foo = MyModules.get( "foo" );
+	var bar = MyModules.get( "bar" );
+	var foo = MyModules.get( "foo" );
 
-console.log(
-	bar.hello( "hippo" )
-); // Let me introduce: hippo
+	console.log(
+		bar.hello( "hippo" )
+	); // Let me introduce: hippo
 
-foo.awesome(); // LET ME INTRODUCE: HIPPO
-```
+	foo.awesome(); // LET ME INTRODUCE: HIPPO
+	```
 
 - ES6 模块
 
-ES6把单个文件视为一个的模块，它并没有inline模式，模块**必须**定义在独立的文件中。
+	ES6把单个文件视为一个的模块，它并没有inline模式，模块**必须**定义在独立的文件中。
 
-**注意：**
+	**注意：**
 
-- 基于函数的JS模块是运行时的（编译器并不解析模块），即可以在定义后修改模块的API。
+	- 基于函数的JS模块是运行时的（编译器并不解析模块），即可以在定义后修改模块的API。
 
-- 相反的，ES6的模块是静态的（编译时解析、不能扩展），如果之后实例引用了定义时没有的API，会报引用错误。
+	- 相反的，ES6的模块是静态的（编译时解析、不能扩展），如果之后实例引用了定义时没有的API，会报引用错误。
