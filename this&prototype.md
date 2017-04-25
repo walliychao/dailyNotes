@@ -50,7 +50,7 @@
   
   这种情况下foo的this指向的是调用它的obj。
   
-  **注意：**
+  注意:
   
     - 链式调用（obj1.obj2.foo）时，只有直接调用foo的obj2对this有意义。
 
@@ -58,24 +58,24 @@
 
     - 返回callback时，原callback的this同样不会被复制。
 
-    ```
-      function foo() {
-        console.log( this.a );
-      }
+  ```
+    function foo() {
+      console.log( this.a );
+    }
 
-      function doFoo(fn) {
-        // `fn` is just another reference to `foo`
+    function doFoo(fn) {
+      // `fn` is just another reference to `foo`
 
-        fn(); // <-- call-site!
-      }
+      fn(); // <-- call-site!
+    }
 
-      var obj = {
-        a: 2,
-        foo: foo
-      };
+    var obj = {
+      a: 2,
+      foo: foo
+    };
 
-      var a = "oops, global"; // `a` also property on global object
+    var a = "oops, global"; // `a` also property on global object
 
-      doFoo( obj.foo ); // "oops, global"
-    ```
+    doFoo( obj.foo ); // "oops, global"
+  ```
       
