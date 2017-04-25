@@ -52,11 +52,11 @@
   
   **注意：**
   
-  - 链式调用（obj1.obj2.foo）时，只有直接调用foo的obj2对this有意义。
+    - 链式调用（obj1.obj2.foo）时，只有直接调用foo的obj2对this有意义。
 
-  - 复制函数的引用（ref = obj.foo）时，this并不会被复制，ref的this会根据它执行时的上下文决定。
+    - 复制函数的引用（ref = obj.foo）时，this并不会被复制，ref的this会根据它执行时的上下文决定。
 
-  - 返回callback时，原callback的this同样不会被复制。
+    - 返回callback时，原callback的this同样不会被复制。
 
     ```
       function foo() {
