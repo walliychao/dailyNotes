@@ -10,6 +10,3 @@
 - 移动端
 - 后端
 - fractal&rythm generate
-
-## action
-- 170406 add some stashed notes
