@@ -52,30 +52,30 @@
   
   **注意：**
   
-    - 链式调用（obj1.obj2.foo）时，只有直接调用foo的obj2对this有意义。
-    
-    - 复制函数的引用（ref = obj.foo）时，this并不会被复制，ref的this会根据它执行时的上下文决定。
-    
-    - 返回callback时，原callback的this同样不会被复制。
+    - 链式调用（obj1.obj2.foo）时，只有直接调用foo的obj2对this有意义。
 
-        ```
-          function foo() {
-            console.log( this.a );
-          }
+    - 复制函数的引用（ref = obj.foo）时，this并不会被复制，ref的this会根据它执行时的上下文决定。
 
-          function doFoo(fn) {
-            // `fn` is just another reference to `foo`
+    - 返回callback时，原callback的this同样不会被复制。
 
-            fn(); // <-- call-site!
-          }
+    ```
+      function foo() {
+        console.log( this.a );
+      }
 
-          var obj = {
-            a: 2,
-            foo: foo
-          };
+      function doFoo(fn) {
+        // `fn` is just another reference to `foo`
 
-          var a = "oops, global"; // `a` also property on global object
+        fn(); // <-- call-site!
+      }
 
-          doFoo( obj.foo ); // "oops, global"
-        ```
+      var obj = {
+        a: 2,
+        foo: foo
+      };
+
+      var a = "oops, global"; // `a` also property on global object
+
+      doFoo( obj.foo ); // "oops, global"
+    ```
       
