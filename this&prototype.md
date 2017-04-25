@@ -36,44 +36,46 @@
 - 隐式绑定
 
   ```
-  function foo() {
-    console.log( this.a );
-  }
+    function foo() {
+      console.log( this.a );
+    }
 
-  var obj = {
-    a: 2,
-    foo: foo
-  };
+    var obj = {
+      a: 2,
+      foo: foo
+    };
 
-  obj.foo(); // 2
+    obj.foo(); // 2
   ```
   
-  这种情况下foo的this指向的是调用它的obj。
+  这种情况下foo的this指向的是调用它的obj。
   
   **注意：**
+  
     - 链式调用（obj1.obj2.foo）时，只有直接调用foo的obj2对this有意义。
-    - 复制函数的引用（ref = obj.foo）时，this并不会被复制，ref的this会根据它执行时的上下文决定。
-    - 返回callback时，原callback的this同样不会被复制。
     
-      ```
-      function foo() {
-        console.log( this.a );
-      }
+    - 复制函数的引用（ref = obj.foo）时，this并不会被复制，ref的this会根据它执行时的上下文决定。
+    
+    - 返回callback时，原callback的this同样不会被复制。
 
-      function doFoo(fn) {
-        // `fn` is just another reference to `foo`
+        ```
+          function foo() {
+            console.log( this.a );
+          }
 
-        fn(); // <-- call-site!
-      }
+          function doFoo(fn) {
+            // `fn` is just another reference to `foo`
 
-      var obj = {
-        a: 2,
-        foo: foo
-      };
+            fn(); // <-- call-site!
+          }
 
-      var a = "oops, global"; // `a` also property on global object
+          var obj = {
+            a: 2,
+            foo: foo
+          };
 
-      doFoo( obj.foo ); // "oops, global"
-      ```
+          var a = "oops, global"; // `a` also property on global object
+
+          doFoo( obj.foo ); // "oops, global"
+        ```
       
-      在doFoo中，fn即是foo,相当于foo()。
