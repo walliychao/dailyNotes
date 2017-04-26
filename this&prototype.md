@@ -92,13 +92,13 @@
 
     foo.call( obj ); // 2
   ```
-  
+  
   使用call或apply可以显式的把obj绑定为foo的this。
-  
-  如果传入的obj是一个原始值（number, string, boolean）等，会进行装箱操作（boxing），转换为一个对应的对象。
-  
+
+  如果传入的obj是一个原始值（number, string, boolean）等，会进行装箱操作（boxing），转换为一个对应的对象。
+
 - 强制绑定
-  
+
   ```
     function foo() {
       console.log( this.a );
@@ -120,10 +120,10 @@
     bar.call( window ); // 2
   ```
   
-  这里强制将foo的this绑定成了obj,不论之后bar函数以什么样的形式执行，都不会改变foo的this绑定。
-  
-  ES5提供的bind函数就是一个强制绑定this的方法，下面是一个bind函数的demo：
-  
+  这里强制将foo的this绑定成了obj,不论之后bar函数以什么样的形式执行，都不会改变foo的this绑定。
+
+  ES5提供的bind函数就是一个强制绑定this的方法，下面是一个bind函数的demo：
+
   ```
     function foo(something) {
       console.log( this.a, something );
@@ -137,30 +137,30 @@
       };
     }
 
-    var obj = {
-      a: 2
-    };
+      var obj = {
+        a: 2
+      };
 
     var bar = bind( foo, obj );
 
     var b = bar( 3 ); // 2 3
     console.log( b ); // 5
   ```
-  
-  **ES6的bind方法会给新生成的方法的name一个特殊的值，即 bar = foo.bind(obj), bar.name = "bound foo"。**
+
+  **ES6的bind方法会给新生成的方法的name一个特殊的值，即 bar = foo.bind(obj), bar.name = "bound foo"。**
 
   **许多新的built-in函数如foreach或js库函数都有thisContext参数，可以显示的指定this值。**
-  
-- **new**绑定
+
+- new绑定
   
   `在js中，构造函数只是普通的函数碰巧在调用时前面加了个new关键字。因此js中其实没有什么构造函数，只有函数的构造调用。`
   
   当一个函数作为构造函数被调用时，以下会发生：
 
-  - 一个新的对象会被创建
+    - 一个新的对象会被创建
 
-  - 这个对象会被添加到它的原型链上
+    - 这个对象会被添加到它的原型链上
 
-  - 这个新创建的对象会被设定为函数构造调用时的的this值
+    - 这个新创建的对象会被设定为函数构造调用时的的this值
 
-  - 除非这个函数特意返回一个它自己创建的对象，否则函数会默认返回这个新创建的对象作为返回值
+    - 除非这个函数特意返回一个它自己创建的对象，否则函数会默认返回这个新创建的对象作为返回值
