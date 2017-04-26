@@ -52,11 +52,11 @@
   
   注意:
   
-    - 链式调用（obj1.obj2.foo）时，只有直接调用foo的obj2对this有意义。
+  - 链式调用（obj1.obj2.foo）时，只有直接调用foo的obj2对this有意义。
 
-    - 复制函数的引用（ref = obj.foo）时，this并不会被复制，ref的this会根据它执行时的上下文决定。
+  - 复制函数的引用（ref = obj.foo）时，this并不会被复制，ref的this会根据它执行时的上下文决定。
 
-    - 返回callback时，原callback的this同样不会被复制。
+  - 返回callback时，原callback的this同样不会被复制。
 
   ```
     function foo() {
@@ -122,7 +122,7 @@
   
   这里强制将foo的this绑定成了obj,不论之后bar函数以什么样的形式执行，都不会改变foo的this绑定。
   
-  ES5提供的bind函数就是一个强制绑定this的方法：
+  ES5提供的bind函数就是一个强制绑定this的方法，下面是一个bind函数的demo：
   
   ```
     function foo(something) {
@@ -149,4 +149,18 @@
   
   **ES6的bind方法会给新生成的方法的name一个特殊的值，即 bar = foo.bind(obj), bar.name = "bound foo"。**
 
-  ```
+  **许多新的built-in函数如foreach或js库函数都有thisContext参数，可以显示的指定this值。**
+  
+- **new**绑定
+  
+  `在js中，构造函数只是普通的函数碰巧在调用时前面加了个new关键字。因此js中其实没有什么构造函数，只有函数的构造调用。`
+  
+  当一个函数作为构造函数被调用时，以下会发生：
+
+  - 一个新的对象会被创建
+
+  - 这个对象会被添加到它的原型链上
+
+  - 这个新创建的对象会被设定为函数构造调用时的的this值
+
+  - 除非这个函数特意返回一个它自己创建的对象，否则函数会默认返回这个新创建的对象作为返回值
