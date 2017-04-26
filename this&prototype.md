@@ -79,3 +79,74 @@
     doFoo( obj.foo ); // "oops, global"
   ```
       
+- 显式绑定
+
+  ```
+    function foo() {
+      console.log( this.a );
+    }
+
+    var obj = {
+      a: 2
+    };
+
+    foo.call( obj ); // 2
+  ```
+  
+  使用call或apply可以显式的把obj绑定为foo的this。
+  
+  如果传入的obj是一个原始值（number, string, boolean）等，会进行装箱操作（boxing），转换为一个对应的对象。
+  
+- 强制绑定
+  
+  ```
+    function foo() {
+      console.log( this.a );
+    }
+
+    var obj = {
+      a: 2
+    };
+
+    var bar = function() {
+      foo.call( obj );
+    };
+
+    bar(); // 2
+    setTimeout( bar, 100 ); // 2
+
+    // `bar` hard binds `foo`'s `this` to `obj`
+    // so that it cannot be overriden
+    bar.call( window ); // 2
+  ```
+  
+  这里强制将foo的this绑定成了obj,不论之后bar函数以什么样的形式执行，都不会改变foo的this绑定。
+  
+  ES5提供的bind函数就是一个强制绑定this的方法：
+  
+  ```
+    function foo(something) {
+      console.log( this.a, something );
+      return this.a + something;
+    }
+
+    // simple `bind` helper
+    function bind(fn, obj) {
+      return function() {
+        return fn.apply( obj, arguments );
+      };
+    }
+
+    var obj = {
+      a: 2
+    };
+
+    var bar = bind( foo, obj );
+
+    var b = bar( 3 ); // 2 3
+    console.log( b ); // 5
+  ```
+  
+  **ES6的bind方法会给新生成的方法的name一个特殊的值，即 bar = foo.bind(obj), bar.name = "bound foo"。**
+
+  ```
