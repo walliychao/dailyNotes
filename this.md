@@ -164,3 +164,27 @@
     - 这个新创建的对象会被设定为函数构造调用时的的this值
 
     - 除非这个函数特意返回一个它自己创建的对象，否则函数会默认返回这个新创建的对象作为返回值
+
+#### 执行顺序
+
+`强制绑定 == 显式绑定 > 隐式绑定 > 默认绑定`
+
+new绑定与显式绑定不能同时存在，`new foo.call(obj1)`会报错。new绑定于强制绑定互不干涉（new操作会生成一个新的对象而不影响原来强制绑定函数的this）。
+
+```
+  function foo(something) {
+    this.a = something;
+  }
+
+  var obj1 = {};
+
+  var bar = foo.bind( obj1 );
+  bar( 2 );
+  console.log( obj1.a ); // 2
+
+  var baz = new bar( 3 );
+  console.log( obj1.a ); // 2
+  console.log( baz.a ); // 3
+```
+
+
