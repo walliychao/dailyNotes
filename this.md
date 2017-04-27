@@ -187,4 +187,44 @@ new绑定与显式绑定不能同时存在，`new foo.call(obj1)`会报错。new
   console.log( baz.a ); // 3
 ```
 
+#### 可能的意外
+
+- foo.call( null ) 
+  
+  如果null或undefined作为this传给call或apply，会被忽略，foo的this会默认的设为global或window。
+  
+- (p.foo = o.foo)()
+
+  这句调用可能会认为this是p，其实相当于p.foo = o.foo; foo(); this是默认的global或window。
+  
+- 箭头函数
+
+  ```
+    function foo() {
+      // return an arrow function
+      return (a) => {
+        // `this` here is lexically adopted from `foo()`
+        console.log( this.a );
+      };
+    }
+
+    var obj1 = {
+      a: 2
+    };
+
+    var obj2 = {
+      a: 3
+    };
+
+    var bar = foo.call( obj1 );
+    bar.call( obj2 ); // 2, not 3!
+  ```
+  
+  箭头函数的this是词法作用域里的this，相当于 var self = this; ((this) => {})(self); 与执行上下文的this不同。
+  
+  建议词法作用域和执行上下文指定this只使用一种形式，否则会产生混乱。
+  
+  
+
+
 
