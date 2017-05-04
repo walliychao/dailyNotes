@@ -82,8 +82,8 @@
 		}, j*1000 );
 	      })();
 	    }
-	  ```
-	  ```
+	```
+	```
 	    for (var i=1; i<=5; i++) {
 	      (function(j){
 		setTimeout( function timer(){
@@ -91,11 +91,11 @@
 		}, j*1000 );
 	      })( i );
 	    }
-	  ```
+	```
   
  - 使用**let**, 创造block作用域
   
-	 ```
+	```
 	    for (var i=1; i<=5; i++) {
 	      let j = i; // yay, block-scope for closure!
 	      setTimeout( function timer(){
