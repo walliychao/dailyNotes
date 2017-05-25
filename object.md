@@ -29,14 +29,14 @@
 
 `object.getOwnPropertyDescriptor( myObject, "a" )`
 
-`
-  Object.defineProperty( myObject, "a", {
-    value: 2,
-    writable: true,
-    configurable: true,
-    enumerable: true
-  } );
-`
+```
+    Object.defineProperty( myObject, "a", {
+        value: 2,
+        writable: true,
+        configurable: true,
+        enumerable: true
+    } );
+```
 
 - writable 
   
@@ -50,5 +50,24 @@
 
   是否能在for...in loop中遍历到
 
+**Immutablility**
+
+以下所有的操作都是浅操作，不影响引用指向的其它对象。
+
+- Constant
   
+  writable: false && configrable: false
+  
+- Object.preventExtensions(..)
   
+  防止对象增加新属性
+  
+- Seal
+
+  preventExtension + 现有属性configrable: false
+  不可新增属性, 且不可配置现有属性
+
+- Freeze
+  
+  seal + 现有属性writable: false
+  不可新增属性, 不可配置或更改现有属性值
