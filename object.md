@@ -57,16 +57,16 @@ Object.defineProperty( myObject, "a", {
 
 - Constant
 
-  writable: false && configrable: false
+    writable: false && configrable: false
   
 - Object.preventExtensions(..)
-  
-  防止对象增加新属性
+    
+    防止对象增加新属性
   
 - Seal
-
-  preventExtension + 现有属性configrable: false 不可新增属性, 且不可配置现有属性
+    
+    preventExtension + 现有属性configrable: false 不可新增属性, 且不可配置现有属性
 
 - Freeze
-  
-  seal + 现有属性writable: false 不可新增属性, 不可配置或更改现有属性值
+    
+    seal + 现有属性writable: false 不可新增属性, 不可配置或更改现有属性值
