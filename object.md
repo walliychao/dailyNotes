@@ -68,5 +68,5 @@ Object.defineProperty( myObject, "a", {
     preventExtension + 现有属性configrable: false 不可新增属性, 且不可配置现有属性
 
 - Freeze
-    
+    
     seal + 现有属性writable: false 不可新增属性, 不可配置或更改现有属性值
