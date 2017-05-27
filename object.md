@@ -70,3 +70,20 @@ Object.defineProperty( myObject, "a", {
 - Freeze
     
     seal + 现有属性writable: false 不可新增属性, 不可配置或更改现有属性值
+
+
+**Getters&&Setters**
+
+定义`get`或`set`函数后, 属性的value和writable特性会被忽略。
+
+只定义get函数，相当于定义了一个不可写的属性。
+
+**Existence**
+
+检查属性是否存在：`in`会查找prototype链; `hasOwnProperty`只会对象本身的属性。
+
+**Enumerable**可枚举性相关: 
+
+`propertyIsEnumerable`检查属性是否是对象的直接属性, 且enumerable为true
+
+`Object.keys`返回对象的所有直接的且可枚举的属性的key; `getOwnPropertyNames`只返回对象的直接属性key
