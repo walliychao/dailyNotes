@@ -93,4 +93,5 @@ Object.defineProperty( myObject, "a", {
 遍历:
     
     `for ... in` 会遍历对象自身及prototype上的所有可枚举属性的key
+    
     `for ... of` 会遍历数组或有iterator接口的对象的值(跟enumerable无关)
