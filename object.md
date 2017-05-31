@@ -86,12 +86,12 @@ Object.defineProperty( myObject, "a", {
 
 可枚举性相关: 
 
-    `propertyIsEnumerable`检查属性是否是对象的直接属性, 且enumerable为true
+`propertyIsEnumerable`检查属性是否是对象的直接属性, 且enumerable为true
 
-    `Object.keys`返回对象的所有直接的且可枚举的属性的key; `getOwnPropertyNames`只返回对象的直接属性key
-    
+`Object.keys`返回对象的所有直接的且可枚举的属性的key; `getOwnPropertyNames`只返回对象的直接属性key
+
 遍历:
-    
-    `for ... in` 会遍历对象自身及prototype上的所有可枚举属性的key
-    
-    `for ... of` 会遍历数组或有iterator接口的对象的值(跟enumerable无关)
+
+`for ... in` 会遍历对象自身及prototype上的所有可枚举属性的key
+
+`for ... of` 会遍历数组或有iterator接口的对象的值(跟enumerable无关)
