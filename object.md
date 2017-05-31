@@ -95,3 +95,19 @@ Object.defineProperty( myObject, "a", {
 `for ... in` 会遍历对象自身及prototype上的所有可枚举属性的key
 
 `for ... of` 会遍历数组或有iterator接口的对象的值(跟enumerable无关)
+
+**prototype**
+
+修改属性时的查找规则:
+
+1. 如果一个普通value属性foo存在于原型链上, 且非只读(writable: true), 则会在当前对象上创建一个新属性foo并覆盖(shadow)原有属性
+2. 如果原型链上存在一个普通value属性, 但是只读(writable: false), 则修改属性操作会失败
+3. 如果一个setter属性foo存在于原型链上, 则会调用这个setter属性, 不会发生覆盖操作, 也不会重新定义setter方法
+4. 引用属性不会发生覆盖, 只会与原型共用一个属性
+
+在 case2 或 case3 的情况想要覆盖属性只能用`Object.defineProperty`方法
+
+`Object.getPrototypeOf( a )`返回a.prototype
+
+`Object.create(a)`返回一个新对象, 其原型指向a.prototype
+
