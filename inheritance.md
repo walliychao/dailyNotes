@@ -51,6 +51,23 @@ console.log(cat instanceof Cat); //true
   4. 无法实现多继承
   5. 来自原型对象的引用属性是所有实例共享的
   6. 创建子类实例时，无法向父类构造函数传参
+  
+### 原型继承变体
+
+```
+function Cat(){ 
+}
+Cat.prototype = Object.create(Animal.prototype);
+Cat.prototype.name = 'cat';
+
+//　Test Code
+var cat = new Cat();
+console.log(cat.sleep());
+console.log(cat instanceof Animal); //true 
+console.log(cat instanceof Cat); //true
+```
+
+特点:与原型继承类似; 只继承原型方法和属性, 不继承实例方法; 不执行构造函数, 避免了构造函数执行时的side-affect
 
 ### 构造函数继承
 
@@ -188,3 +205,21 @@ console.log(cat instanceof Cat); //true
 ```
 
 特点: 砍掉了父类的实例属性, 拥有组合继承的所有优点, 且不会初始化两次实例方法, 缺点是实现复杂
+
+- ES5写法
+
+```
+function Cat(name){
+	Animal.call(this);
+	this.name = name || 'Tom';
+}
+Cat.prototype = Object.create(Animal.prototype);
+
+// Test Code
+var cat = new Cat();
+console.log(cat.sleep());
+console.log(cat instanceof Animal); // true
+console.log(cat instanceof Cat); //true
+```
+
+特点: 拥有寄生组合式的所有优点, 且写法更简单
