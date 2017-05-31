@@ -113,4 +113,4 @@ Object.defineProperty( myObject, "a", {
 
 `Bar.prototype = Object.create( Foo.prototype )` <=> `Object.setPrototypeOf( Bar.prototype, Foo.prototype )`
 
-`setPrototypeOf` 为ES6方法
+`setPrototypeOf` 为ES6方法设置一个对象的prototype值
