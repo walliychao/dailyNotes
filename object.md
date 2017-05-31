@@ -111,3 +111,6 @@ Object.defineProperty( myObject, "a", {
 
 `Object.create(a)`返回一个新对象, 其原型指向a.prototype
 
+`Bar.prototype = Object.create( Foo.prototype )` <=> `Object.setPrototypeOf( Bar.prototype, Foo.prototype )`
+
+`setPrototypeOf` 为ES6方法
