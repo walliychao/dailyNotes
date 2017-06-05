@@ -96,7 +96,7 @@ Object.defineProperty( myObject, "a", {
 
 `for ... of` 会遍历数组或有iterator接口的对象的值(跟enumerable无关)
 
-**prototype**
+### prototype
 
 修改属性时的查找规则:
 
@@ -107,10 +107,34 @@ Object.defineProperty( myObject, "a", {
 
 在 case2 或 case3 的情况想要覆盖属性只能用`Object.defineProperty`方法
 
-`Object.getPrototypeOf( a )`返回a.prototype
+**Object.create**
 
-`Object.create(a)`返回一个新对象, 其原型指向a.prototype
+`Object.create(a)`返回一个新对象, 其原型指向a.prototype, `Object.create(null)`会生成一个原型为空的对象
+
+polyfill:
+
+```
+if (!Object.create) {
+	Object.create = function(o) {
+		function F(){}
+		F.prototype = o;
+		return new F();
+	};
+}
+```
+
+**get & set prototype**
+
+`a.__proto__` <=> `Object.getPrototypeOf( a )` 返回a.prototype
 
 `Bar.prototype = Object.create( Foo.prototype )` <=> `Object.setPrototypeOf( Bar.prototype, Foo.prototype )`
 
-`setPrototypeOf` 为ES6方法设置一个对象的prototype值
+`setPrototypeOf` 为ES6方法, 设置一个对象的prototype值
+
+**instanceOf & isPrototypeOf**
+
+`a instanceOf Foo` a为待测试对象, Foo 为构造函数 如果Foo.prototype出现在a的整个原型链上, 则返回true
+
+假如Foo是一个bind返回函数, 即 `Foo = bar.bind(this)`, 则Foo.prototype 实际上等于 bar.prototype, a instanceOf Foo 实际上判断的是a是否是bar的实例
+
+`Foo.prototype.isPrototypeOf( a )` 与上面的效果相同, `b.isPrototypeOf(a)` 可以测试两个对象之间的关系
