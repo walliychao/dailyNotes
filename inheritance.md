@@ -271,3 +271,43 @@ Object.getPrototypeOf(cat1) === Cat;
 3. 使用ES5, ES6新语法, 需要浏览器支持或代码编译
 
 ### ES6 Class继承
+
+父类:
+```
+Class Animal {
+	constructor(name) {
+		this.name = name;
+	}
+	sleep() {
+		console.log(this.name + '正在睡觉！');
+	}
+	eat() {
+		console.log(this.name + '正在吃：' + food);
+	}
+}
+```
+
+子类:
+```
+Class Cat extends Animal {
+	constructor(name) {
+		super(name);
+		this.name = name;
+	}
+	sleep() {
+		super();
+		console.log(this.name + 'is sleeping');
+	}
+}
+```
+
+实例化子类:
+```
+let cat1 = new Cat('cat1');
+let cat2 = new Cat('cat2');
+```
+
+**特点**:
+1. 是原型链继承的语法糖, 只是语法更简洁优雅, 更像类定义的格式
+2. super会调用原型链上上一层的对象的构造函数, 类似组合继承的模式; super是类定义时静态确定的, 后期修改对象的原型, super不会改变
+3. 不要把class继承模式跟其它方式混用, 不要定义之后动态修改类的原型对象, 否则会出问题
