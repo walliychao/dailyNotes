@@ -3,13 +3,13 @@
 
 ```
 function Animal (name) {
-	this.name = name || 'Animal';
+	this.name = name || 'animal';
   	this.sleep = function() {
-    		console.log(this.name + '正在睡觉！');
+    		console.log(this.name + ' is sleeping');
   	}
 }
 Animal.prototype.eat = function(food) {
-  	console.log(this.name + '正在吃：' + food);
+  	console.log(this.name + ' is eating ' + food);
 };
 ```
 
@@ -77,8 +77,8 @@ function Cat(name){
 	this.name = name || 'Tom';
 	var sleep = this.sleep;
 	this.sleep = function() {
-		console.log(this.name + 'is going to sleep');
 		sleep();
+		console.log(this.name + ' is purring');
 	};
 }
 
@@ -108,8 +108,8 @@ function Cat(name){
 	instance.name = name || 'Tom';
 	var sleep = instance.sleep;
 	instance.sleep = function() {
-		console.log(this.name + '去窝里');
 		sleep.call(this);
+		console.log(this.name + ' is purring');
 	};
 	return instance;
 }
@@ -137,8 +137,8 @@ function Cat(name){
 	}
 	Cat.prototype.name = name || 'Tom';
 	this.sleep = function() {
-		console.log(this.name + '去窝里');
 		animal.sleep.call(this);
+		console.log(this.name + ' is purring');
 	}
 }
 
@@ -231,10 +231,10 @@ console.log(cat instanceof Cat); //true
 var Animal = {
 	name: 'animal',
 	sleep: function() {
-		console.log(this.name + '正在睡觉！');
+		console.log(this.name + ' is sleeping');
 	},
-	eat: function() {
-		console.log(this.name + '正在吃：' + food);
+	eat: function(food) {
+		console.log(this.name + ' is eating' + food);
 	}
 }
 ```
@@ -242,7 +242,11 @@ var Animal = {
 子对象:
 ```
 var Cat = {
-	init: function(name) { this.name = name }
+	init: function(name) { this.name = name },
+	catSleep: function() {
+		this.sleep();
+		console.log(this.name + ' is purring');
+	}
 }
 ```
 
@@ -254,7 +258,7 @@ Object.setPrototypeOf(Cat, Animal)
 新增子级对象:
 ```
 cat1 = Object.create(Cat);
-cat2 = Object.create(Cat);
+cat1.init('cat');
 ```
 
 验证对象间关系:
@@ -274,29 +278,28 @@ Object.getPrototypeOf(cat1) === Cat;
 
 父类:
 ```
-Class Animal {
+class Animal {
 	constructor(name) {
-		this.name = name;
+		this.name = name || 'animal';
 	}
 	sleep() {
-		console.log(this.name + '正在睡觉！');
+		console.log(this.name + ' is sleeping');
 	}
-	eat() {
-		console.log(this.name + '正在吃：' + food);
+	eat(food) {
+		console.log(this.name + ' is eating ' + food);
 	}
 }
 ```
 
 子类:
 ```
-Class Cat extends Animal {
+class Cat extends Animal {
 	constructor(name) {
 		super(name);
-		this.name = name;
 	}
 	sleep() {
-		super();
-		console.log(this.name + 'is sleeping');
+		super.sleep();
+		console.log(this.name + ' is purring ');
 	}
 }
 ```
