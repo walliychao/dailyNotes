@@ -266,5 +266,8 @@ Object.getPrototypeOf(cat1) === Cat;
 
 **特点**:
 
- 1. 没有构造函数或类和实例的概念, 没有`new`、 `instanceOf`、`constructor`, 只是把对象链接到原型链上, 实现更简单更接近原理
- 2. 不能通过`new + param`直接初始化一个对象, 必须先Object.create再init, setup等
+1. 没有构造函数或类和实例的概念, 没有`new`、 `instanceOf`、`constructor`, 只是把对象链接到原型链上, 实现更简单更接近原理
+2. 不能通过`new + param`直接初始化一个对象, 必须先Object.create再init, setup等
+3. 使用ES5, ES6新语法, 需要浏览器支持或代码编译
+
+### ES6 Class继承
