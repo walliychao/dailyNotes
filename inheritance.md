@@ -223,3 +223,48 @@ console.log(cat instanceof Cat); //true
 ```
 
 特点: 拥有寄生组合式的所有优点, 且写法更简单
+
+### OOLO(Objects Linked to Other Objects)继承
+
+父对象:
+```
+var Animal = {
+	name: 'animal',
+	sleep: function() {
+		console.log(this.name + '正在睡觉！');
+	},
+	eat: function() {
+		console.log(this.name + '正在吃：' + food);
+	}
+}
+```
+
+子对象:
+```
+var Cat = {
+	init: function(name) { this.name = name }
+}
+```
+
+父子对象继承:
+```
+Object.setPrototypeOf(Cat, Animal)
+```
+
+新增子级对象:
+```
+cat1 = Object.create(Cat);
+cat2 = Object.create(Cat);
+```
+
+验证对象间关系:
+```
+Animal.isPrototypeOf(cat1);
+Cat.isPrototypeOf(cat2);
+Object.getPrototypeOf(cat1) === Cat;
+```
+
+**特点**:
+
+ 1. 没有构造函数或类和实例的概念, 没有`new`、 `instanceOf`、`constructor`, 只是把对象链接到原型链上, 实现更简单更接近原理
+ 2. 不能通过`new + param`直接初始化一个对象, 必须先Object.create再init, setup等
