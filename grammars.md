@@ -35,3 +35,12 @@ a; // referenceError
 
 如果用var定义, 即使未执行if内的语句, 也会进行变量提升
 
+### Array
+```
+a["13"] = 42;
+a.length; // 14
+```
+
+注意不要形成sparse array, `delete`, `Array(3)`都会形成sparse array
+
+ES6的Array.from({length: 3})可以生成一个每个元素都有值(undefined)的数组
