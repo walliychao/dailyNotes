@@ -1,4 +1,4 @@
-### Function Object
+### Function
 ```
 function a(b, c) {}
 a.length    // 2
@@ -8,6 +8,7 @@ a.length    // 2
 ### typeof
 ```
 typeof null === 'object'
+typeof NaN === 'number'
 ```
 
 ```
@@ -33,3 +34,4 @@ a; // referenceError
 ```
 
 如果用var定义, 即使未执行if内的语句, 也会进行变量提升
+
