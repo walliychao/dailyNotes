@@ -106,3 +106,16 @@ JSON.parse( "-0" );		// -0
 
 ### -值&引用
 所有的原始值都是值传递, 对象都是引用传递; 原始值的对象包装(boxed value)是引用传递, 但是它包含的原始值是不可变的, 因此跟原始值相同的效果
+
+### -JSON stringify
+JSON.stringify无法转换undefined, function, Symbol和有循环引用的对象; 处理有循环引用的对象时会报错, 其它值如果直接转换会返回undefined, 如果在数组中会替换为null, 如果在Object中则会忽略这个属性
+
+如果一个对象有`toJSON`这个方法, 则会默认调用这个方法得到*一个JSON-safe的值之后*再进行JSON stringify转换, 可以重写这个方法来改变转换时使用的实际对象
+
+stringify的第二个参数可以传一个replacer, 跟toJSON同样的功能, 可以过滤json转换时用到的属性
+
+- replacer如果是一个数组, 则包含所有应该被转换的属性名, 没有包含的属性会被忽略
+- replacer如果是一个方法, 会对要转换的object和它的所有属性执行这个方法, 参数是key和value, 如果要过滤某个属性则返回undefined, 否则返回对应的value值
+
+stringify的第三个参数是indentation设置, 如果是数字则表示用几个空格, 如果是字符串(如'----')则用字符串做indentation
+
