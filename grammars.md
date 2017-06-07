@@ -70,7 +70,7 @@ a.length; // 14
 
 注意不要形成sparse array, `delete`, `Array(3)`都会形成sparse array
 
-ES6的Array.from({length: 3})可以生成一个每个元素都有值(undefined)的数组
+ES6的`Array.from({length: 3})`可以生成一个每个元素都有值(undefined)的数组; ES5形式`Array.apply(null, {length: 3})`也有同样效果
 
 ### -Number
 - |: `a | 0`可以把a转成一个32bit的数字: 去掉小数位, null | NaN | Infinity 转成0
