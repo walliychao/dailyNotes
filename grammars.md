@@ -243,6 +243,41 @@ a >= b;	// true, 因为a < b 为fasle
 	[] + {}; 			// "[object Object]"
 	{} + []; 			// 0
 	```
-	第二行会被解析成一个空的block`{void}`, 再加一个表达式`+[]`, `+[]`的值是0, 所以返回0
+	第二行会被解析成一个独立的空block`{}`, 再加一个表达式`+[]`, `+[]`的值是0, 所以返回0
+	
+- function parameter
+	```
+	var b = 3;
+	function foo( a = 42, b = a + b + 5 ) {
+		// ..
+	}
+	```
+	error, ES6的函数参数默认值是let声明的, `b = a+b+5`在使用b时是没有声明的; 参数传undefined时跟没有传参一样效果, 会使用默认值, 但arguments对象长度会有差别
+	
+	```
+	function foo(a) {
+		a = 42;
+		console.log( arguments[0] );
+	}
+
+	foo( 2 );	// 42 (linked)
+	foo();		// undefined (not linked)
+	```
+	在函数中, arguments中的值和参数名是互相链接的, 改变一个会同时改变另一个的值, 不传参时不会链接
+	
+	```
+	function foo(a) {
+		"use strict";
+		a = 42;
+		console.log( arguments[0] );
+	}
+
+	foo( 2 );	// 2 (not linked)
+	foo();		// undefined (not linked)
+	```
+	在strict模式下这种链接又不存在...
+	
+	**不要同时使用arguments和参数名两种方式, 特别是在修改参数值的情况下**
+	
 	
 	
