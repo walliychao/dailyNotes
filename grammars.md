@@ -402,4 +402,15 @@ a >= b;	// true, 因为a < b 为fasle
 	// 3
 	```
 	
-	default可以不在最后, 但总是会在最后被判断; 上面代码会首先跳过case1234, 然后匹配到default, 因为default没有break所以会继续往下执行直到case3的break, 这就出现了问题...
+	default可以不在最后, 但总是会在最后被判断; 上面代码会首先跳过case1234, 然后匹配到default, 因为default没有break所以会继续往下执行直到case3的break, 这就出现了问题
+	
+### -script标签
+变量提升只会存在于script标签内, 代码错误也只会影响当前script, 不会影响其它script的执行
+
+```
+<script>
+  var code = "<script>alert( 'Hello World' )</script>";
+</script>
+```
+
+上面的代码会出错, 在script标签内只要出现"</script>"就会被认为标签结束, 通常的做法是写成"</sc" + "ript>"
