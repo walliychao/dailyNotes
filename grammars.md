@@ -279,5 +279,119 @@ a >= b;	// true, 因为a < b 为fasle
 	
 	**不要同时使用arguments和参数名两种方式, 特别是在修改参数值的情况下**
 	
+ -finally
+	`try...catch...finally`中finally中如果有特殊代码, 可能发生意外操作
+
+	```
+	function foo() {
+		try {
+			return 42;
+		}
+		finally {
+			throw "Oops!";
+		}
+
+		console.log( "never runs" );
+	}
+
+	console.log( foo() );
+	// Uncaught Exception: Oops!
+	```
+	`try`正常执行, `finally`抛出错误, 最终会抛错
+
+	```
+	function foo() {
+		try {
+			return 42;
+		}
+		finally {
+			// no `return ..` here, so no override
+		}
+	}
+
+	function bar() {
+		try {
+			return 42;
+		}
+		finally {
+			// override previous `return 42`
+			return;
+		}
+	}
+
+	function baz() {
+		try {
+			return 42;
+		}
+		finally {
+			// override previous `return 42`
+			return "Hello";
+		}
+	}
+
+	foo();	// 42
+	bar();	// undefined
+	baz();	// "Hello"
+	```
+	finally和try中如果都有return, finally会覆盖try的return
+
+	```
+	function foo() {
+		bar: {
+			try {
+				return 42;
+			}
+			finally {
+				// break out of `bar` labeled block
+				break bar;
+			}
+		}
+
+		console.log( "Crazy" );
+
+		return "Hello";
+	}
+
+	console.log( foo() );
+	// Crazy
+	// Hello
+	```
+	finally中的break跳出了当前代码块...
+
+ -switch
+	```
+	var a = "42";
+
+	switch (true) {
+		case a == 10:
+			console.log( "10 or '10'" );
+			break;
+		case a == 42:
+			console.log( "42 or '42'" );
+			break;
+		default:
+			// never gets here
+	}
+	// 42 or '42'
+	```
+	case后面可以跟表达式, 只要跟switch的内容严格相等(===)就行
 	
-	
+	```
+	var a = 10;
+
+	switch (a) {
+		case 1:
+		case 2:
+			// never gets here
+		default:
+			console.log( "default" );
+		case 3:
+			console.log( "3" );
+			break;
+		case 4:
+			console.log( "4" );
+	}
+	// default
+	// 3
+	```
+	default可以不在最后, 但总是会在最后被判断; 上面代码会首先跳过case1234, 然后匹配到default, 因为default没有break所以会继续往下执行直到case3的break, 这就出现了问题...
