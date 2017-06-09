@@ -279,7 +279,7 @@ a >= b;	// true, 因为a < b 为fasle
 	
 	**不要同时使用arguments和参数名两种方式, 特别是在修改参数值的情况下**
 	
- -finally
+ - finally
 	`try...catch...finally`中finally中如果有特殊代码, 可能发生意外操作
 
 	```
@@ -297,7 +297,9 @@ a >= b;	// true, 因为a < b 为fasle
 	console.log( foo() );
 	// Uncaught Exception: Oops!
 	```
+	
 	`try`正常执行, `finally`抛出错误, 最终会抛错
+
 
 	```
 	function foo() {
@@ -333,7 +335,9 @@ a >= b;	// true, 因为a < b 为fasle
 	bar();	// undefined
 	baz();	// "Hello"
 	```
+	
 	finally和try中如果都有return, finally会覆盖try的return
+
 
 	```
 	function foo() {
@@ -356,9 +360,10 @@ a >= b;	// true, 因为a < b 为fasle
 	// Crazy
 	// Hello
 	```
+	
 	finally中的break跳出了当前代码块...
 
- -switch
+ - switch
 	```
 	var a = "42";
 
@@ -374,7 +379,9 @@ a >= b;	// true, 因为a < b 为fasle
 	}
 	// 42 or '42'
 	```
+	
 	case后面可以跟表达式, 只要跟switch的内容严格相等(===)就行
+	
 	
 	```
 	var a = 10;
@@ -394,4 +401,5 @@ a >= b;	// true, 因为a < b 为fasle
 	// default
 	// 3
 	```
+	
 	default可以不在最后, 但总是会在最后被判断; 上面代码会首先跳过case1234, 然后匹配到default, 因为default没有break所以会继续往下执行直到case3的break, 这就出现了问题...
