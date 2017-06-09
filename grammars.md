@@ -109,7 +109,7 @@ ES6的`Array.from({length: 3})`可以生成一个每个元素都有值(undefined
 ### -值&引用
 所有的原始值都是值传递, 对象都是引用传递; 原始值的对象包装(boxed value)是引用传递, 但是它包含的原始值是不可变的, 因此跟原始值相同的效果
 
-### 类型转换
+### -类型转换
 一个对象转换成特定的原始值类型时, 会首先检查是否有`valueOf`方法, 有则调用这个方法; 否则检查是否有`toString`方法将对象转化为原始值之后再做类型转换; 如果两个方法都没有, 则会报`TypeError`
 
 - Date to Number
@@ -171,4 +171,75 @@ parseInt( "103", 2 );		// 2
 	var bb = aa 
 	aa == bb              // true
 	aa === bb             // true
+	```
+	
+- string <==> number
+string跟number比较会把string转成number形式再进行比较
+
+- anything <==> boolean
+任何值跟boolean比较时, 都会把boolean先转成number(0或1)再进行比较
+
+- null <==> undefined => true
+null和undefined是互相==的, 任何其它值(false, '', 0)都不与null或undefined ==
+
+- object <==> non-object
+object在与非object比较时, object会通过`valueOf`或`toString`转成一个原始值, 转成原始值之后会跟non-object参照前三条进行比较; 一个原始值与它boxed之后的对象是 == 的
+
+**Object -> non-Object, boolean -> number, string -> number**
+
+**首先把值转换成原始类型, 如果包含null或undefined则按第三条比较; 如果类型相同则直接比较; 如果类型不同则转换成number比较**
+
+```
+false == "0";			// true
+false == 0;			// true
+false == "";			// true
+false == [];			// true
+"" == 0;			// true
+"" == [];			// true
+0 == [];			// true
+```
+
+**666**
+```
+[] == ![]			// true -- ![]会转成false再比较
+2 == [2];			// true -- [2]会转成'2'
+"" == [null];			// true -- [null]会转成''
+"" == [undefined];		// true -- [undefined]会转成''
+
+0 == "\n";			// true -- '\n', ' ', '\r', '\t'等*空字符串*都会转成数字0比较
+```
+
+**==两边如果可能出现`true`, `false`, 绝对不要使用; 如果可能出现`0`, `''`, `[]`, 尽量避免使用**
+
+### - <, >, <=, >=
+`a > b`会被处理成`b < a`; `a >= b`会被处理成`b <= a`; `b <= a`实际上是`!(b > a)`即`!(a < b)`
+
+```
+var a = { b: 42 };
+var b = { b: 43 };
+
+a < b;	// false, 两边都转成'[object Object]'
+a == b;	// false, 两边都是object, 比较reference
+a > b;	// false, 同a < b
+
+a <= b;	// true, 因为a > b 为fasle
+a >= b;	// true, 因为a < b 为fasle
+```
+
+比较时首先将两边转换成原始值, 如果一边存在null或undefined则直接返回false, 如果两边都是string则按字典顺序比较, 如果类型不同则转换成数字进行比较
+
+### -quirks
+- 连等问题
+	```
+	var a = 3
+	a = b = a++
+	a // 3
+	b // 3
+	```
+	b没有声明; a被赋值为`b = a++`这个表达式返回的值, 实际是b的值
+
+- block
+	```
+	[] + {}; 			// "[object Object]"
+	{} + []; 			// 0
 	```
