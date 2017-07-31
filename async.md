@@ -18,5 +18,5 @@ js是以函数(function)作为最小的代码片段, 并把它们放到事件队
 
 - new Promise(..): 传入一个立即执行的`function(resolve, reject){}`, reject会使当前promise对象变成`rejected`状态; resolve则会根据调用时传入的数据决定, 功能与`Promise.resolve()`相同
 - Promise.reject(..) & Promise.resolve(..): `Promise.reject()`会生成一个拒绝状态的promise对象; `promise.resolve()`会根据传入的数据决定, 如果是普通数据就是`fullfilled`状态, 如果是thenable对象则会转化为真正的promise对象, 然后跟进promise对象的最终状态决定是`fullfilled`或`rejected`状态
-- then() & catch():
-Promise.all([..]) & Promise.race([..]):
+- then() & catch(): 每个promise对象都可以用`then`注册`fullfilled`或`rejected`状态时的处理方法; `catch`相当于then(null, ..); then或catch方法都会返回一个新的promise对象方便链式调用. 如果不传参数或参数不是一个方法时会有默认的处理方法, fullfill回调默认把数据传给下一个then注册的回调, reject回调也会把错误传给下一个
+- Promise.all([..]) & Promise.race([..]): 数组中需要传promise对象或thenable对象, 最终会转化成合法的promise对象, `promise.all`在所有成员都`fullfilled`时才会变成`fullfilled`状态, 任何一个成员`rejected`就会变成`rejected`状态; `promise.race`相反, 任何一个成员`fullfilled`即变成`fullfilled`状态, 只有所有成员都`rejected`的时候才会变成`rejected`状态
