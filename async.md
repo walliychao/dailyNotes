@@ -2,6 +2,13 @@ js是以函数(function)作为最小的代码片段, 并把它们放到事件队
 
 ### Callback
 
+```
+ajax('post', function(success, err) {})
+```
+```
+setTimeout(function() {}, 1000)
+```
+
 #### callback drawbacks
 
 - callback hell / pyramid doom: 嵌套调用难以追踪程序执行顺序
@@ -22,3 +29,22 @@ js是以函数(function)作为最小的代码片段, 并把它们放到事件队
 - Promise.reject(..) & Promise.resolve(..): `Promise.reject()`会生成一个拒绝状态的promise对象; `promise.resolve()`会根据传入的数据决定, 如果是普通数据就是`fullfilled`状态, 如果是thenable对象则会转化为真正的promise对象, 然后跟进promise对象的最终状态决定是`fullfilled`或`rejected`状态
 - then() & catch(): 每个promise对象都可以用`then`注册`fullfilled`或`rejected`状态时的处理方法; `catch`相当于then(null, ..); then或catch方法都会返回一个新的promise对象方便链式调用. 如果不传参数或参数不是一个方法时会有默认的处理方法, fullfill回调默认把数据传给下一个then注册的回调, reject回调也会把错误传给下一个
 - Promise.all([..]) & Promise.race([..]): 数组中需要传promise对象或thenable对象, 最终会转化成合法的promise对象, `promise.all`在所有成员都`fullfilled`时才会变成`fullfilled`状态, 任何一个成员`rejected`就会变成`rejected`状态; `promise.race`相反, 任何一个成员`fullfilled`即变成`fullfilled`状态, 只有所有成员都`rejected`的时候才会变成`rejected`状态
+
+### Generator
+
+```
+function *foo(x) {
+	var y = x * (yield "Hello");	// <-- yield a value!
+	return y;
+}
+var it = foo( 6 );
+var res = it.next();	// first `next()`, don't pass anything
+res.value;				// "Hello"
+res = it.next( 7 );		// pass `7` to waiting `yield`
+res.value;				// 42
+```
+
+- `it.foo(6)`返回一个iterator, 但不实际执行foo方法
+- `it.next()`开始执行foo方法, 到`yield "hello"`暂停, 并将"Hello"作为iterator的value返回
+- `it.next(7)`从yield开始执行foo方法, 并将7传给yield语句(代替`yield "hello"`执行计算)
+- 最后y作为iterator的value返回(如果没有return则会默认返回undefined)
