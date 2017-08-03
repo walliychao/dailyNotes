@@ -44,6 +44,77 @@ p.then(function(a) {
 - then() & catch(): 每个promise对象都可以用`then`注册`fullfilled`或`rejected`状态时的处理方法; `catch`相当于then(null, ..); then或catch方法都会返回一个新的promise对象方便链式调用. 如果不传参数或参数不是一个方法时会有默认的处理方法, fullfill回调默认把数据传给下一个then注册的回调, reject回调也会把错误传给下一个
 - Promise.all([..]) & Promise.race([..]): 数组中需要传promise对象或thenable对象, 最终会转化成合法的promise对象, `promise.all`在所有成员都`fullfilled`时才会变成`fullfilled`状态, 任何一个成员`rejected`就会变成`rejected`状态; `promise.race`相反, 任何一个成员`fullfilled`即变成`fullfilled`状态, 只有所有成员都`rejected`的时候才会变成`rejected`状态
 
+#### promisify & thunkify
+
+```
+function promisify(fn) {
+	return function() {
+		var args = [].slice.call( arguments );
+		return new Promise( function(resolve,reject){
+			fn.apply(
+				null,
+				args.concat( function(err,v){
+					if (err) {
+						reject( err );
+					}
+					else {
+						resolve( v );
+					}
+				} )   // currify
+			);
+		} );
+	};
+}
+```
+```
+function thunkify(fn) {
+	return function() {
+		var args = [].slice.call( arguments );
+		return function(cb) {
+			args.push( cb );
+			return fn.apply( null, args );  // currify
+		};
+	};
+}
+```
+
+- promisify返回一个函数, 这个函数可以把传入的callback形式代码转化为相应的promise对象
+- thunkify返回一个函数, 这个函数把传入的方法柯里化, 转化成只需要最后的callback参数的形式
+- promisify也可以实现柯里化, 把调用时传入的参数固化下来, 作为之后函数调用时参数的一部分
+
+使用形式:
+```
+// symmetrical: constructing the question asker
+var fooThunkory = thunkify( foo );
+var fooPromisory = promisify( foo );
+
+// symmetrical: asking the question
+var fooThunk = fooThunkory( 3, 4 );
+var fooPromise = fooPromisory( 3, 4 );
+
+// get the thunk answer
+fooThunk( function(err,sum){
+	if (err) {
+		console.error( err );
+	}
+	else {
+		console.log( sum );		// 7
+	}
+} );
+
+// get the promise answer
+fooPromise
+.then(
+	function(sum){
+		console.log( sum );		// 7
+	},
+	function(err){
+		console.error( err );
+	}
+);
+```
+co的实现就是基于thunkify, 之后作者在转向promise实现
+
 ### Generator
 
 ```
@@ -96,7 +167,6 @@ it.next().value;	// `*foo()` finished
 - 可以以`yield *foo()`的形式在yield之后接另一个generator方法, 执行到这一句之后会转到foo中执行
 - 被delegate的foo方法可以return数据给外层的yield语句, 错误或异常也可以`throw`给外部`catch`
 - `yield *[ "B", "C", "D" ]`也可以实现delegate, 因为数组有默认的iterator(只要返回合法的iterator, 即使不是generator函数也能是现在yield delegate)
-
 
 ### callback + generator
 
