@@ -65,7 +65,40 @@ res.value;				// 42
 
 generator把原先原子化执行的函数(function)转化成了代码执行片段, 且可以利用yield和next动态跟外部互相传递数据
 
-#### callback + generator
+#### yield delegation
+
+```
+function *foo() {
+	console.log( "`*foo()` starting" );
+	yield 3;
+	yield 4;
+	console.log( "`*foo()` finished" );
+}
+
+function *bar() {
+	yield 1;
+	yield 2;
+	yield *foo();	// `yield`-delegation!
+	yield 5;
+}
+
+var it = bar();
+
+it.next().value;	// 1
+it.next().value;	// 2
+it.next().value;	// `*foo()` starting
+					// 3
+it.next().value;	// 4
+it.next().value;	// `*foo()` finished
+					// 5
+```
+
+- 可以以`yield *foo()`的形式在yield之后接另一个generator方法, 执行到这一句之后会转到foo中执行
+- 被delegate的foo方法可以return数据给外层的yield语句, 错误或异常也可以`throw`给外部`catch`
+- `yield *[ "B", "C", "D" ]`也可以实现delegate, 因为数组有默认的iterator(只要返回合法的iterator, 即使不是generator函数也能是现在yield delegate)
+
+
+### callback + generator
 
 ```
 function foo(x,y) {
@@ -102,7 +135,7 @@ it.next();
 - 可以用`it.throw()`向generator外部抛出错误, 如果`yield foo(11, 31)`时发生错误, 也可以从外部catch错误
 - `it.return()`可以提前结束iterator遍历
 
-#### promise + generator
+### promise + generator
 
 ```
 function foo(x,y) {
@@ -137,7 +170,7 @@ p.then(
 - `request`会返回一个promise, 即yield一个promise对象, 然后在promise的注册方法里控制generator的iterator执行
 - generator的`main`函数内部可以不作任何变化, 只是外部的处理由回调变成了promise
 
-#### promise + generator runner
+### promise + generator + runner
 
 ```
 function run(gen) {
@@ -197,23 +230,41 @@ run( main );
 ### async + await
 
 ```
-function foo(x,y) {
-	return request(
-		"http://some.url.1/?x=" + x + "&y=" + y
+async function request(url) {
+	var resp = await (
+		new Promise( function(resolve,reject){
+			var xhr = new XMLHttpRequest();
+			xhr.open( "GET", url );
+			xhr.onreadystatechange = function(){
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						resolve( xhr );
+					}
+					else {
+						reject( xhr.statusText );
+					}
+				}
+			};
+			xhr.send();
+		} )
 	);
+
+	return resp.responseText;
 }
 
-async function main() {
-	try {
-		var text = await foo( 11, 31 );
-		console.log( text );
+var pr = request( "http://some.url.1" );
+
+pr.then(
+	function fulfilled(responseText){
+		// ajax success
+	},
+	function rejected(reason){
+		// Oops, something went wrong
 	}
-	catch (err) {
-		console.error( err );
-	}
-}
-main();
+);
 ```
 
-- `main()`返回一个promise对象, promise`fullfilled`时会自动执行generator下一步
-- 相当于前面 promise + generator + runner的语法糖
+- `main()`返回一个promise对象, promise`fullfilled`时会自动执行generator下一步, 即`resolve(xhr)`执行时xhr会传到`var resp = await ...`处, 而不是main的then方法里
+- main方法的`return resp.responseText`会传到main返回的promise对象的then方法中作为fullfilled方法的参数
+- async方法会在promise `resolve`时自动执行下一步代码直到结束, 并且返回值会传给async返回的promise对象的then方法中, 相当于 promise + generator + runner的语法糖
+
