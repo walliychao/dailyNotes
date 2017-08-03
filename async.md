@@ -44,7 +44,79 @@ res = it.next( 7 );		// pass `7` to waiting `yield`
 res.value;				// 42
 ```
 
-- `it.foo(6)`返回一个iterator, 但不实际执行foo方法
+- `it = foo(6)`返回一个iterator, 但不实际执行foo方法
 - `it.next()`开始执行foo方法, 到`yield "hello"`暂停, 并将"Hello"作为iterator的value返回
 - `it.next(7)`从yield开始执行foo方法, 并将7传给yield语句(代替`yield "hello"`执行计算)
 - 最后y作为iterator的value返回(如果没有return则会默认返回undefined)
+
+generator把原先原子化执行的函数(function)转化成了代码执行片段, 且可以利用yield和next动态跟外部互相传递数据
+
+#### callback + generator
+
+```
+function foo(x,y) {
+	ajax(
+		"http://some.url.1/?x=" + x + "&y=" + y,
+		function(err,data){
+			if (err) {
+				// throw an error into `*main()`
+				it.throw( err );
+			}
+			else {
+				// resume `*main()` with received `data`
+				it.next( data );
+			}
+		}
+	);
+}
+function *main() {
+	try {
+		var text = yield foo( 11, 31 );
+		console.log( text );
+	}
+	catch (err) {
+		console.error( err );
+	}
+}
+var it = main();
+it.next();
+```
+
+- 在`yield foo(11, 31)`时调用异步的foo方法, 跟进ajax返回结果判断继续执行main方法还是抛出错误
+- 可以用`it.throw()`向generator外部抛出错误, 如果`yield foo(11, 31)`时发生错误, 也可以从外部catch错误
+- `it.return()`可以提前结束iterator遍历
+
+#### promise + generator
+
+```
+function foo(x,y) {
+	return request(
+		"http://some.url.1/?x=" + x + "&y=" + y
+	);
+}
+function *main() {
+	try {
+		var text = yield foo( 11, 31 );
+		console.log( text );
+	}
+	catch (err) {
+		console.error( err );
+	}
+}
+```
+```
+var it = main();
+var p = it.next().value;
+// wait for the `p` promise to resolve
+p.then(
+	function(text){
+		it.next( text );
+	},
+	function(err){
+		it.throw( err );
+	}
+);
+```
+
+- `request`会返回一个promise, 即yield一个promise对象, 然后在promise的注册方法里控制generator的iterator执行
+- generator的`main`函数内部可以不作任何变化, 只是外部的处理由回调变成了promise
