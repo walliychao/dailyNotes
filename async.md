@@ -16,12 +16,26 @@ setTimeout(function() {}, 1000)
 
 ### Promise
 
+```
+var p = new Promise( function(resolve,reject){
+	resolve( "A" );
+} );
+p.then(function(a) {
+	console.log(a);
+	return "B";
+})
+.then(function(b) {
+	console.log(b);
+});
+```
+
 - promise一定是异步返回, 即使`Promise(resolve => resolve(42))`的`then()`方法也不会同步调用resolve
 - 当一个promise对象resolve的时候, 所有用`then`注册的方法都会按照顺序在`event`队列的当前event之后作为`Jobs`执行; `Jobs`是比`Event`更小的执行单位
 - promise不能被撤销, 最终一定会变成`fullfilled`或`rejected`状态, 且状态不可改变; 之后再调用resolve或reject方法都会被忽略
 - promise上注册的then方法都会且只会被调用一次
 - promise的`resolve`或`reject`方法只接受一个参数, 之后的参数都会被忽略
 - promise在创建或`then`方法中如果有报错(`TypeError` `ReferenceError`), 会自动变成`rejected`状态并向之后注册的`reject`方法抛出这个错误
+- promise的`then`方法会返回一个promise对象, 如果当前then方法内有抛错则会变成`rejected`状态, 否则变成`fullfilled`状态, resolve方法如有返回值则会传到下个resolve方法中作为参数
 
 #### promise API
 
@@ -69,6 +83,8 @@ function foo(x,y) {
 		}
 	);
 }
+```
+```
 function *main() {
 	try {
 		var text = yield foo( 11, 31 );
@@ -120,3 +136,84 @@ p.then(
 
 - `request`会返回一个promise, 即yield一个promise对象, 然后在promise的注册方法里控制generator的iterator执行
 - generator的`main`函数内部可以不作任何变化, 只是外部的处理由回调变成了promise
+
+#### promise + generator runner
+
+```
+function run(gen) {
+	var args = [].slice.call( arguments, 1), it;
+
+	// initialize the generator in the current context
+	it = gen.apply( this, args );
+
+	// return a promise for the generator completing
+	return Promise.resolve()
+		.then( function handleNext(value){
+			// run to the next yielded value
+			var next = it.next( value );
+
+			return (function handleResult(next){
+				// generator has completed running?
+				if (next.done) {
+					return next.value;
+				}
+				// otherwise keep going
+				else {
+					return Promise.resolve( next.value )
+						.then(
+							// resume the async loop on
+							// success, sending the resolved
+							// value back into the generator
+							handleNext,
+
+							// if `value` is a rejected
+							// promise, propagate error back
+							// into the generator for its own
+							// error handling
+							function handleErr(err) {
+								return Promise.resolve(
+									it.throw( err )
+								)
+								.then( handleResult );
+							}
+						);
+				}
+			})(next);
+		} );
+}
+```
+```
+function *main() {
+	// ..
+}
+
+run( main );
+```
+
+- `run`方法返回一个promise对象, 而不需要自己手动执行`it.next().value`
+- promise对象`fullfilled`的时候, 如果generator函数未结束, 会自动把返回值转化成promise对象, 在该promise`fullfilled`时执行generator的下一步操作
+- generator每一个yield的值, 都会转化成promise对象, 在它`fullfilled`的时候异步的执行generator的下一步, 如果generator结束则直接返回value
+
+### async + await
+
+```
+function foo(x,y) {
+	return request(
+		"http://some.url.1/?x=" + x + "&y=" + y
+	);
+}
+
+async function main() {
+	try {
+		var text = await foo( 11, 31 );
+		console.log( text );
+	}
+	catch (err) {
+		console.error( err );
+	}
+}
+main();
+```
+
+- `main()`返回一个promise对象, promise`fullfilled`时会自动执行generator下一步
+- 相当于前面 promise + generator + runner的语法糖
