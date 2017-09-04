@@ -80,3 +80,18 @@ function foo( x = w + 1, y = x + 1, z = z + 1 ) {
 foo();					// ReferenceError
 ```
 其中`x = w + 1`会找到外层的w声明, 成功执行; `y = x + 1`会使用之前声明并赋值的x, 成功执行; `z = z + 1`因为z已经声明, 所以不会再到外层作用域寻找, 又因为使用z的时候z还没有声明(类似let声明), 因此会报错
+
+### Destructuring 解构赋值
+```
+var [ a, b, c ] = foo();
+var { x: x, y: y, z: z } = bar();
+```
+当参数名跟需要声明的名称完全一致时, 可以写成`var {x, y, z} = bar()`; 而需要声明的变量跟参数名不一致时
+```
+var { x: bam, y: baz, z: bap } = bar();
+console.log( bam, baz, bap );		// 4 5 6
+console.log( x, y, z );				// ReferenceError
+```
+可见`x:`代表原参数名, 后面表示声明的新变量; 跟普通的变量声明顺序相反
+
+#### 先声明 后赋值
