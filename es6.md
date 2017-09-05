@@ -95,3 +95,57 @@ console.log( x, y, z );				// ReferenceError
 可见`x:`代表原参数名, 后面表示声明的新变量; 跟普通的变量声明顺序相反
 
 #### 先声明 后赋值
+```
+var a, b, c, x, y, z;
+
+[a,b,c] = foo();
+( { x, y, z } = bar() );
+```
+```
+var o = {};
+[o.a, o.b, o.c] = foo();
+( { x: o.x, y: o.y, z: o.z } = bar() );
+
+var a1 = [ 1, 2, 3 ],
+	a2 = [];
+
+[ a2[2], a2[0], a2[1] ] = a1;
+```
+```
+var which = "x",
+	o = {};
+
+( { [which]: o[which] } = bar() );
+```
+可以先声明变量再使用; 也可以赋值给对象属性, 数组成员等复杂变量; 还可以使用计算属性
+
+#### 重复赋值
+```
+var { a: X, a: Y } = { a: 1 };
+
+X;	// 1
+Y;	// 1
+```
+```
+var { a: { x: X, x: Y }, a } = { a: { x: 1 } };
+
+X;	// 1
+Y;	// 1
+a;	// { x: 1 }
+```
+同一个值可以重复赋值给不同的变量
+```
+p = { a, b, c } = o;
+console.log( a, b, c );			// 1 2 3
+p === o;						// true
+```
+连等时p与o指向同一个变量
+
+#### 默认值assignment
+```
+var [ a = 3, b = 6, c = 9, d = 12 ] = foo();
+var { x = 5, y = 10, z = 15, w = 20 } = bar();
+
+console.log( a, b, c, d );			// 1 2 3 12
+console.log( x, y, z, w );			// 4 5 6 20
+```
