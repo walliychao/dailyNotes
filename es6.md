@@ -141,7 +141,7 @@ p === o;						// true
 ```
 连等时p与o指向同一个变量
 
-#### 默认值assignment
+#### 解构默认值
 ```
 var [ a = 3, b = 6, c = 9, d = 12 ] = foo();
 var { x = 5, y = 10, z = 15, w = 20 } = bar();
@@ -149,3 +149,32 @@ var { x = 5, y = 10, z = 15, w = 20 } = bar();
 console.log( a, b, c, d );			// 1 2 3 12
 console.log( x, y, z, w );			// 4 5 6 20
 ```
+也可以跟普通赋值混合
+```
+var { x, y, z, w: WW = 20 } = bar();
+console.log( x, y, z, WW );			// 4 5 6 20
+```
+
+#### 嵌套赋值
+```
+var [ a, [ b, c, d ], e ] = a1;
+var { x: { y: { z: w } } } = o1;
+```
+
+#### 函数参数解构
+```
+function foo( { x, y } ) {
+	console.log( x, y );
+}
+```
+
+#### 解构默认值 + 函数参数默认值
+```
+function f6({ x = 10 } = {}, { y } = { y: 10 }) {
+	console.log( x, y );
+}
+
+f6();								// 10 10
+f6( {}, {} );						// 10 undefined
+```
+第一个参数是解构默认值, 传入`{}`时内部x为`undefined`, 默认值生效; 第二个参数是函数参数默认值, 传入参数是`{}`而非`undefined`, 默认值`{y: 10}`不会生效, 所以y是`undefined`
