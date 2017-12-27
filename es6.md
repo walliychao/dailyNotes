@@ -174,7 +174,86 @@ function f6({ x = 10 } = {}, { y } = { y: 10 }) {
 	console.log( x, y );
 }
 
-f6();								// 10 10
-f6( {}, {} );						// 10 undefined
+f6();						// 10 10
+f6( undefined, undefined );			// 10 10
+f6( {}, undefined );				// 10 10
+
+f6( {}, {} );					// 10 undefined
+f6( undefined, {} );				// 10 undefined
+
+f6( { x: 2 }, { y: 3 } );			// 2 3
 ```
 第一个参数是解构默认值, 传入`{}`时内部x为`undefined`, 默认值生效; 第二个参数是函数参数默认值, 传入参数是`{}`而非`undefined`, 默认值`{y: 10}`不会生效, 所以y是`undefined`
+
+### super
+super只允许在object的简写形式的方法中调用(`o = {a() {super.xxx()}}`), 且只允许`super.xxx`的调用形式
+
+### Template string
+template string 的`${}`中可以使用任何表达式, 如``to all of you ${upper( `${who}s` )}!``, 但最好不要使用多层template string
+
+#### template的作用域
+template类似一个立即执行函数(IIFE), 它的作用域也可以用IIFE解释(取template解析时的作用域下的变量):
+```
+function foo(str) {
+	var name = "foo";
+	console.log( str );
+}
+
+function bar() {
+	var name = "bar";
+	foo( `Hello from ${name}!` );
+}
+
+var name = "global";
+
+bar();					// "Hello from bar!"
+```
+
+#### tagged template
+类似一个方法, 后面的template string会作为处理成参数(strings, value)传入, tag甚至可以是一个返回一个新函数的函数调用: bar()`template ${foo}`
+```
+function foo(strings, ...values) {
+	console.log( strings );
+	console.log( values );
+}
+
+var desc = "awesome";
+
+foo`Everything is ${desc}!`;
+// [ "Everything is ", "!"]
+// [ "awesome" ]
+```
+
+#### String.raw
+String.raw是一个内置的tag, 可以返回string的raw形式, tag方法的参数strings.raw也能得到一个raw string
+```
+function showraw(strings, ...values) {
+	console.log( strings );
+	console.log( strings.raw );
+}
+
+showraw`Hello\nWorld`;
+// [ "Hello
+// World" ]
+// [ "Hello\nWorld" ]
+
+console.log( `Hello\nWorld` );
+// Hello
+// World
+
+console.log( String.raw`Hello\nWorld` );
+// Hello\nWorld
+
+String.raw`Hello\nWorld`.length;
+// 12
+```
+
+### arrow function
+arrow function(=>)会自动把`this`置为当前作用域的this, 动态的this指向失效
+
+因此仅在不需要`this`引用或者希望保持当前lexical的`this`(之前使用`var self = this`, 或者`.bind(this)`实现)的情况下才能使用箭头函数
+
+**同时箭头函数的`arguments`, `super`, `new.target`都会lexical的继承当前作用域函数的值**
+```自动
+```
+```
