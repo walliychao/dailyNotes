@@ -254,6 +254,19 @@ arrow function(=>)会自动把`this`置为当前作用域的this, 动态的this�
 因此仅在不需要`this`引用或者希望保持当前lexical的`this`(之前使用`var self = this`, 或者`.bind(this)`实现)的情况下才能使用箭头函数
 
 **同时箭头函数的`arguments`, `super`, `new.target`都会lexical的继承当前作用域函数的值**
-```自动
+
+### Symbol
+- 不应该用`new`的方式新建一个Symbol, 它不是一个Object 或 Class
+- 传给`Symbol(...)`的参数是可选的, 可以是一段简单的描述string
+- 使用`typeof`检查一个`Symbol()`返回值时会返回`"symbol"`
+
 ```
+var sym = Symbol( "some optional description" );
+typeof sym;		// "symbol"
+sym.toString();		// "Symbol(some optional description)"
 ```
+
+可以通过`Symbol.for("some decs")`来获取注册在全局的Symbol值, 可是这样又变成通过字符串获取特殊值的模式...
+
+**同时箭头函数的`arguments`, `super`, `new.target`都会lexical的继承当前作用域函数的值**
+**同时箭头函数的`arguments`, `super`, `new.target`都会lexical的继承当前作用域函数的值**
