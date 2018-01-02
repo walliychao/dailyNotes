@@ -268,5 +268,17 @@ sym.toString();		// "Symbol(some optional description)"
 
 可以通过`Symbol.for("some decs")`来获取注册在全局的Symbol值, 可是这样又变成通过字符串获取特殊值的模式...
 
-**同时箭头函数的`arguments`, `super`, `new.target`都会lexical的继承当前作用域函数的值**
-**同时箭头函数的`arguments`, `super`, `new.target`都会lexical的继承当前作用域函数的值**
+### for...of & Iterator
+for...of可以在iterator生成的, 或者原生支持iterator接口的对象中遍历值;
+原生支持iterator的对象有Array, String, Generator, Collection/TypedArray
+```
+var arr = [1,2,3];
+var it = arr[Symbol.iterator]();
+```
+
+调用对象的iterator接口会返回一个iterable的值`it`, 可以在`it`上调用`it.next()`获取当前的结果`{ value: .. , done: true / false }`;
+
+如果迭代已经结束, done会返回`true`, value返回`undefined`, 否则done返回`false`, value是当前迭代的值, 即for..of遍历时会返回的值
+
+可以使用`it.return()`, `it.throw()`提前结束迭代(抛出错误)
+
