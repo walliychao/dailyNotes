@@ -138,3 +138,63 @@ if (!Object.create) {
 假如Foo是一个bind返回函数, 即 `Foo = bar.bind(this)`, 则Foo.prototype 实际上等于 bar.prototype, a instanceOf Foo 实际上判断的是a是否是bar的实例
 
 `Foo.prototype.isPrototypeOf( a )` 与上面的效果相同, `b.isPrototypeOf(a)` 可以测试两个对象之间的关系
+
+### ES6 Meta Property
+
+**new.target**
+
+在一个constructor函数(由`new`调用的函数)中引用new.target, 返回的是实际new的constructor函数(class中的constructor与class有相同的名字)
+```
+class Parent {
+	constructor() {
+		if (new.target === Parent) {
+			console.log( "Parent instantiated" );
+		}
+		else {
+			console.log( "A child instantiated" );
+		}
+	}
+}
+var a = new Parent();
+// Parent instantiated
+```
+
+**Symbol.iterator**
+
+可以通过Symbol.iterator获取或设置对象的iterator
+```javascript
+var it = arr[Symbol.iterator]()
+```
+
+**Symbol.toStringTag**
+可以通过Symbol.toStringTag修改对象toString时显示的名称
+```
+function Foo(greeting) {
+	this.greeting = greeting;
+}
+
+Foo.prototype[Symbol.toStringTag] = "Foo";
+var a = new Foo( "hello" );
+var b = new Foo( "world" );
+b[Symbol.toStringTag] = "cool";
+a.toString();				// [object Foo]
+String( b );				// [object cool]
+```
+
+**Symbol.hasInstance**
+
+可以通过Symbol.hasInstance控制`instanceof`操作符返回的结果
+```
+Object.defineProperty( Foo, Symbol.hasInstance, {
+	value: function(inst) {
+		return inst.greeting == "hello";
+	}
+} );
+var a = new Foo( "hello" );
+var b = new Foo( "world" );
+
+a instanceof Foo;			// true
+b instanceof Foo;			// false
+```
+
+**Symbol.species**
