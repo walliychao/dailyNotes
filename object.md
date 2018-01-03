@@ -254,3 +254,39 @@ Symbol.primitive会提供一个参数`hint`, 会传入运算类型`string`或`nu
 
 `+`或`==`运算会传入`default`, 表示default类型运算; `*`或`/`会传入`number`, 表示number类型运算; `String(a)`会传入`string`, 表示string类型运算
 
+**Regular Expression Symbol**
+
+ES6新增了一些string的原生方法属性:`Symbol.match`, `Symbol.replace`,`Symbol.search`,`Symbol.split`, 它们都可以传入一个正则表达式对象来进行正则匹配并完成特定字符串处理; 改写这些属性可以改变字符串操作的默认行为, 添加自定义的复杂操作
+
+除非真的有必要, 否则不应该改写这些默认方法, 因为js引擎提供的正则匹配方法通常都是最优化和高效的
+
+**Symbol.isConcatSpreadable**
+```
+var a = [1,2,3];
+var b = [4,5,6];
+
+b[Symbol.isConcatSpreadable] = false;
+[].concat( a, b );		// [1,2,3,[4,5,6]]
+```
+Symbol.isConcatSpreadable属性可以指定一个对象在传给数组的`concat`方法时是否应该作`spread`展开, 可以传`true`或`false`两个值
+
+**Symbol.unscopables**
+
+指定在`with`操作下, 一个对象的哪些属性是不应该暴露在当前作用域下
+```
+var o = { a:1, b:2, c:3 },
+	a = 10, b = 20, c = 30;
+
+o[Symbol.unscopables] = {
+	a: false,
+	b: true,
+	c: false
+};
+
+with (o) {
+	console.log( a, b, c );		// 1 20 3
+}
+```
+因为给b设了`true`, 所以o对象的b属性不暴露出来, 所以b的值取外层的`20`
+
+因为`with`在`strict`模式下不允许使用, 所以Symbol.unscopables也无效果, 不推荐使用
