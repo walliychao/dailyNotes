@@ -29,6 +29,8 @@
 
 `object.getOwnPropertyDescriptor( myObject, "a" )`
 
+类似的方法还有`Object.getOwnPropertyDescriptors(..)`, `Object.getOwnPropertyNames(..)`, `Object.getOwnPropertySymbols(..)`
+
 ```
 Object.defineProperty( myObject, "a", {
     value: 2,
@@ -167,6 +169,7 @@ var it = arr[Symbol.iterator]()
 ```
 
 **Symbol.toStringTag**
+
 可以通过Symbol.toStringTag修改对象toString时显示的名称
 ```
 function Foo(greeting) {
@@ -290,3 +293,8 @@ with (o) {
 因为给b设了`true`, 所以o对象的b属性不暴露出来, 所以b的值取外层的`20`
 
 因为`with`在`strict`模式下不允许使用, 所以Symbol.unscopables也无效果, 不推荐使用
+
+### ES6 Proxy && Reflect
+
+### ES6 属性顺序
+
