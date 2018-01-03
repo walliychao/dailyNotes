@@ -198,3 +198,59 @@ b instanceof Foo;			// false
 ```
 
 **Symbol.species**
+
+Symbol.species是在一个类的原生constructor上的, 可以指定原生方法(**built-in method**)使用的constructor函数, 如`slice`方法创建一个新数组时使用的constructor
+```
+class Cool {
+	// 调用Symbol.species属性返回的是当前Constructor: this
+	static get [Symbol.species]() { return this; }
+
+	again() {
+		return new this.constructor[Symbol.species]();
+	}
+}
+
+class Fun extends Cool {}
+
+class Awesome extends Cool {
+	// 强制Symbol.species属性返回Cool
+	static get [Symbol.species]() { return Cool; }
+}
+
+var a = new Fun();
+var b = new Awesome();
+var c = a.again();
+var d = b.again();
+
+c instanceof Fun;		// true
+d instanceof Awesome;		// false
+d instanceof Cool;		// true
+```
+上例中Fun的`again`方法使用的是Cool的Symbol.species属性, 返回的是当前使用的constructor, 即`Fun`, 所以`c instanceof Fun`为`true`
+
+而Awesome的Symbol.species属性被改写, 返回Cool的constructor, 因此`d instanceof Cool`会返回`true`
+
+**Symbol.toPrimitive**
+
+Symbol.toPrimitive可以控制`==`或`+`做值比较时由对象转换到原始值时使用的方法`toPrimitive`
+
+```
+var arr = [1,2,3,4,5];
+
+arr + 10;				// 1,2,3,4,510
+
+arr[Symbol.toPrimitive] = function(hint) {
+	if (hint == "default" || hint == "number") {
+		// sum all numbers
+		return this.reduce( function(acc,curr){
+			return acc + curr;
+		}, 0 );
+	}
+};
+
+arr + 10;				// 25
+```
+Symbol.primitive会提供一个参数`hint`, 会传入运算类型`string`或`number`或`default`, `default`也表示类型是number
+
+`+`或`==`运算会传入`default`, 表示default类型运算; `*`或`/`会传入`number`, 表示number类型运算; `String(a)`会传入`string`, 表示string类型运算
+
