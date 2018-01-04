@@ -72,7 +72,10 @@ Object.defineProperty( myObject, "a", {
 - Freeze
     
     seal + 现有属性writable: false 不可新增属性, 不可配置或更改现有属性值
+    
+- Object.isExtensible
 
+    检查对象是否可扩展
 
 **Getters&&Setters**
 
@@ -253,7 +256,7 @@ arr[Symbol.toPrimitive] = function(hint) {
 
 arr + 10;				// 25
 ```
-Symbol.primitive会提供一个参数`hint`, 会传入运算类型`string`或`number`或`default`, `default`也表示类型是number
+Symbol.toPrimitive会提供一个参数`hint`, 会传入运算类型`string`或`number`或`default`, `default`也表示类型是number
 
 `+`或`==`运算会传入`default`, 表示default类型运算; `*`或`/`会传入`number`, 表示number类型运算; `String(a)`会传入`string`, 表示string类型运算
 
@@ -296,5 +299,97 @@ with (o) {
 
 ### ES6 Proxy && Reflect
 
+proxy可以包装任意一个普通的object对象, 拦截对这个对象的一些操作(如get, set等), 做一些特定的操作
+```
+var obj = { a: 1 };
+var handlers = {
+	get(target,key,context) {
+		// note: target === obj,
+		// context === pobj
+		console.log( "accessing: ", key );
+		return Reflect.get(
+			target, key, context
+		);
+	}
+};
+var pobj = new Proxy( obj, handlers );
+
+obj.a;
+// 1
+
+pobj.a;
+// accessing: a
+// 1
+```
+上例中obj是一个普通对象, pobj是一个包装它的proxy对象, 它会拦截obj的所有get操作
+
+参数中target是操作对象, 即obj; key是访问的属性, 这里是a; context是proxy对象, 这里是pobj
+
+proxy创建方式是`new Proxy(target, handler)`, 其中handler是一些统一的处理方法, 这些方法跟Reflect对象上的方法一一对应(名字相同), 配合Proxy handler使用
+- get(..): 属性被访问时会被调用处理, 并且在函数中调用Reflect.get(taget, key, context)实际操作目标对象
+- set(..): 属性被赋值时
+- apply(..): 目标对象是一个方法, 且被调用`call`或`apply`时
+- deleteProperty(..): 属性被删除(delete)时
+- construct(..): 目标对象作为一个constructor方法被执行(new)时
+- getOwnPropertyDescriptor(..): 目标对象(Object)上调用相应方法时
+- defineProperty(..): 目标对象(Object)上调用相应方法时
+- getPrototypeOf(..): 目标对象(Object)上调用相应方法时
+- setPrototypeOf(..): 目标对象(Object)上调用相应方法时
+- preventExtensions(..): 目标对象(Object)上调用相应方法时
+- isExtensible(..): 目标对象(Object)上调用相应方法时
+- ownKeys(..) 目标对象(Object)上调用`Object.keys()`, `Object.getOwnPropertyNames()`, `Object.getOwnPropertySymbols()`, 以及`JSON.stringify(obj)`时, 及获取对象所有属性的时候会调用处理
+- enumerate(..): 执行`for...in`操作遍历所有可枚举属性时
+- has(..): 目标对象上执行`Object.hasOwnProperty()`或`"prop" in Obj`检查时
+
+**proxy 限制**
+
+以下这些操作都无法被proxy拦截处理
+```
+typeof obj;
+String( obj );
+obj + "";
+obj == pobj;
+obj === pobj;
+```
+
+**revokable proxy**
+
+可撤回的proxy: obj, 和handlers同之前的例子, 初始化时调用`Proxy.revocable(obj, handlers)`, 返回的是proxy对象和一个revoke方法
+
+调用revoke方法之后pobj即不生效, 在pobj上进行任何操作都会报TypeError的错误
+
+```
+{ proxy: pobj, revoke: prevoke } =
+	Proxy.revocable(obj, handlers);
+
+pobj.a;
+// accessing: a
+// 1
+
+// later:
+prevoke();
+
+pobj.a;
+// TypeError
+```
+
 ### ES6 属性顺序
 
+ES6规定了对象的属性在被遍历时: `Reflect.ownKeys()`, `Object.keys()`, `Object.getOwnPropertyNames()`, `Object.getOwnPropertySymbols()`, 以及`JSON.stringify(obj)`时的顺序
+- 以升序列出所有整数数字为key的属性(1,2,5,8...)
+- 以创建顺序列出所有字符串key
+- 以创建顺序列出所有Symbol属性
+
+```
+var o = {};
+
+o[Symbol("c")] = "yay";
+o[2] = true;
+o[1] = true;
+o.b = "awesome";
+o.a = "cool";
+
+Reflect.ownKeys( o );				// [1,2,"b","a",Symbol(c)]
+Object.getOwnPropertyNames( o );	// [1,2,"b","a"]
+Object.getOwnPropertySymbols( o );	// [Symbol(c)]
+```
