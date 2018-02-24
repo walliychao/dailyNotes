@@ -31,7 +31,7 @@
 
 类似的方法还有`Object.getOwnPropertyDescriptors(..)`, `Object.getOwnPropertyNames(..)`, `Object.getOwnPropertySymbols(..)`
 
-```
+```javascript
 Object.defineProperty( myObject, "a", {
     value: 2,
     writable: true,
@@ -118,7 +118,7 @@ Object.defineProperty( myObject, "a", {
 
 polyfill:
 
-```
+```javascript
 if (!Object.create) {
 	Object.create = function(o) {
 		function F(){}
@@ -149,7 +149,7 @@ if (!Object.create) {
 **new.target**
 
 在一个constructor函数(由`new`调用的函数)中引用new.target, 返回的是实际new的constructor函数(class中的constructor与class有相同的名字)
-```
+```javascript
 class Parent {
 	constructor() {
 		if (new.target === Parent) {
@@ -174,7 +174,7 @@ var it = arr[Symbol.iterator]()
 **Symbol.toStringTag**
 
 可以通过Symbol.toStringTag修改对象toString时显示的名称
-```
+```javascript
 function Foo(greeting) {
 	this.greeting = greeting;
 }
@@ -190,7 +190,7 @@ String( b );				// [object cool]
 **Symbol.hasInstance**
 
 可以通过Symbol.hasInstance控制`instanceof`操作符返回的结果
-```
+```javascript
 Object.defineProperty( Foo, Symbol.hasInstance, {
 	value: function(inst) {
 		return inst.greeting == "hello";
@@ -206,7 +206,7 @@ b instanceof Foo;			// false
 **Symbol.species**
 
 Symbol.species是在一个类的原生constructor上的, 可以指定原生方法(**built-in method**)使用的constructor函数, 如`slice`方法创建一个新数组时使用的constructor
-```
+```javascript
 class Cool {
 	// 调用Symbol.species属性返回的是当前Constructor: this
 	static get [Symbol.species]() { return this; }
@@ -240,7 +240,7 @@ d instanceof Cool;		// true
 
 Symbol.toPrimitive可以控制`==`或`+`做值比较时由对象转换到原始值时使用的方法`toPrimitive`
 
-```
+```javascript
 var arr = [1,2,3,4,5];
 
 arr + 10;				// 1,2,3,4,510
@@ -267,7 +267,7 @@ ES6新增了一些string的原生方法属性:`Symbol.match`, `Symbol.replace`,`
 除非真的有必要, 否则不应该改写这些默认方法, 因为js引擎提供的正则匹配方法通常都是最优化和高效的
 
 **Symbol.isConcatSpreadable**
-```
+```javascript
 var a = [1,2,3];
 var b = [4,5,6];
 
@@ -279,7 +279,7 @@ Symbol.isConcatSpreadable属性可以指定一个对象在传给数组的`concat
 **Symbol.unscopables**
 
 指定在`with`操作下, 一个对象的哪些属性是不应该暴露在当前作用域下
-```
+```javascript
 var o = { a:1, b:2, c:3 },
 	a = 10, b = 20, c = 30;
 
@@ -300,7 +300,7 @@ with (o) {
 ### ES6 Proxy && Reflect
 
 proxy可以包装任意一个普通的object对象, 拦截对这个对象的一些操作(如get, set等), 做一些特定的操作
-```
+```javascript
 var obj = { a: 1 };
 var handlers = {
 	get(target,key,context) {
@@ -344,7 +344,7 @@ proxy创建方式是`new Proxy(target, handler)`, 其中handler是一些统一�
 **proxy 限制**
 
 以下这些操作都无法被proxy拦截处理
-```
+```javascript
 typeof obj;
 String( obj );
 obj + "";
@@ -358,7 +358,7 @@ obj === pobj;
 
 调用revoke方法之后pobj即不生效, 在pobj上进行任何操作都会报TypeError的错误
 
-```
+```javascript
 { proxy: pobj, revoke: prevoke } =
 	Proxy.revocable(obj, handlers);
 
@@ -380,7 +380,7 @@ ES6规定了对象的属性在被遍历时: `Reflect.ownKeys()`, `Object.keys()`
 - 以创建顺序列出所有字符串key
 - 以创建顺序列出所有Symbol属性
 
-```
+```javascript
 var o = {};
 
 o[Symbol("c")] = "yay";
