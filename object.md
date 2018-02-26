@@ -59,7 +59,7 @@ Object.defineProperty( myObject, "a", {
 
 - Constant
 
-    writable: false && configrable: false
+    writable: false && configurable: false
   
 - Object.preventExtensions(..)
     
