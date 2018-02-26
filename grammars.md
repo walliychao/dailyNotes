@@ -1,17 +1,17 @@
 ### -Function
-```
+```javascript
 function a(b, c) {}
 a.length    // 2
 ```
 函数对象的length属性表示它定义时参数的个数
 
 ### -typeof
-```
+```javascript
 typeof null === 'object'
 typeof NaN === 'number'
 ```
 
-```
+```javascript
 var a
 typeof a === 'undefined'
 typeof b === 'undefined'
@@ -19,14 +19,14 @@ typeof b === 'undefined'
 未声明和未赋值的变量typeof都是undefined
 
 ### -hoist
-```
+```javascript
 if (0) {
     var a = 3;
 }
 a; // undefined
 ```
 
-```
+```javascript
 if (0) {
     a = 3;
 }
@@ -39,14 +39,14 @@ a; // referenceError
 `undefined`是一个内置的变量, 默认值就是undefined
 
 在non-strict模式下可以改变全局的undefined值, strict模式下不可以
-```
+```javascript
 function foo() {
 	undefined = 2; // really bad idea!
 }
 ```
 
 在strict和non-strict模式下都可以改变本地的undefined值
-```
+```javascript
 function foo() {
 	"use strict";
 	var undefined = 2;
@@ -57,13 +57,13 @@ function foo() {
 **绝对不要改undefined值!!**
 
 `void`可以把任何表达式的值变成undefined 返回
-```
+```javascript
 void 0      // undefined
 void 3+4    // undefined
 ```
 
 ### -Array
-```
+```javascript
 a["13"] = 42;
 a.length; // 14
 ```
@@ -82,7 +82,7 @@ ES6的`Array.from({length: 3})`可以生成一个每个元素都有值(undefined
 - Infinity: 只能从普通值计算得到Infinity, 而不能从Infinity计算得到普通值; 即Infinity跟任何值计算都是Infinity, 除了 `Infinity / Infinity === NaN`, `a / Infinity === 0`等
 
 - -0: 乘除运算可能结果会为-0
-	```
+	```javascript
 	var a = 0 / -3                  // -0
 
 	// -0 stringify之后会变成0
@@ -113,12 +113,12 @@ ES6的`Array.from({length: 3})`可以生成一个每个元素都有值(undefined
 一个对象转换成特定的原始值类型时, 会首先检查是否有`valueOf`方法, 有则调用这个方法; 否则检查是否有`toString`方法将对象转化为原始值之后再做类型转换; 如果两个方法都没有, 则会报`TypeError`
 
 - Date to Number
-	```
+	```javascript
 	var d = new Date( "Mon, 18 Aug 2014 08:53:06 CDT" );
 	+d; // 1408369986000
 	```
 - Symbol
-	```
+	```javascript
 	var s1 = Symbol( "cool" );
 	String( s1 );					// "Symbol(cool)"
 	s` + "";						// TypeError
@@ -149,7 +149,7 @@ stringify的第三个参数是indentation设置, 如果是数字则表示用几�
 
 ### -parseInt
 如果传给parseInt的值不是string, 则会默认转成string后再parse成number
-```
+```javascript
 parseInt( 0.000008 );		// 0   ("0" from "0.000008")
 parseInt( 0.0000008 );		// 8   ("8" from "8e-7")
 parseInt( false, 16 );		// 250 ("fa" from "false")
@@ -161,7 +161,7 @@ parseInt( "103", 2 );		// 2
 
 ### -双等号==
 - ==两边的变量都是object(function, array)时, 只有当变量指向的对象完全一致时才会返回true, 而且跟===的表现一样, 不会做类型转换
-	```
+	```javascript
 	var aa = [1,2,3]
 	var bb = [1,2,3]
 	aa == bb              // false
@@ -189,7 +189,7 @@ object在与非object比较时, object会通过`valueOf`或`toString`转成一�
 
 **首先把值转换成原始类型, 如果包含null或undefined则按第三条比较; 如果类型相同则直接比较; 如果类型不同则转换成number比较**
 
-```
+```javascript
 false == "0";			// true
 false == 0;			// true
 false == "";			// true
@@ -200,7 +200,7 @@ false == [];			// true
 ```
 
 **666**
-```
+```javascript
 [] == ![]			// true -- ![]会转成false再比较
 2 == [2];			// true -- [2]会转成'2'
 "" == [null];			// true -- [null]会转成''
@@ -214,7 +214,7 @@ false == [];			// true
 ### - <, >, <=, >=
 `a > b`会被处理成`b < a`; `a >= b`会被处理成`b <= a`; `b <= a`实际上是`!(b > a)`即`!(a < b)`
 
-```
+```javascript
 var a = { b: 42 };
 var b = { b: 43 };
 
@@ -230,7 +230,7 @@ a >= b;	// true, 因为a < b 为fasle
 
 ### -quirks
 - 连等问题
-	```
+	```javascript
 	var a = 3
 	a = b = a++
 	a // 3
@@ -239,14 +239,14 @@ a >= b;	// true, 因为a < b 为fasle
 	b没有声明; a被赋值为`b = a++`这个表达式返回的值, 实际是b的值
 
 - block
-	```
+	```javascript
 	[] + {}; 			// "[object Object]"
 	{} + []; 			// 0
 	```
 	第二行会被解析成一个独立的空block`{}`, 再加一个表达式`+[]`, `+[]`的值是0, 所以返回0
 	
 - function parameter
-	```
+	```javascript
 	var b = 3;
 	function foo( a = 42, b = a + b + 5 ) {
 		// ..
@@ -254,7 +254,7 @@ a >= b;	// true, 因为a < b 为fasle
 	```
 	error, ES6的函数参数默认值是let声明的, `b = a+b+5`在使用b时是没有声明的; 参数传undefined时跟没有传参一样效果, 会使用默认值, 但arguments对象长度会有差别
 	
-	```
+	```javascript
 	function foo(a) {
 		a = 42;
 		console.log( arguments[0] );
@@ -265,7 +265,7 @@ a >= b;	// true, 因为a < b 为fasle
 	```
 	在函数中, arguments中的值和参数名是互相链接的, 改变一个会同时改变另一个的值, 不传参时不会链接
 	
-	```
+	```javascript
 	function foo(a) {
 		"use strict";
 		a = 42;
@@ -282,7 +282,7 @@ a >= b;	// true, 因为a < b 为fasle
  - finally
 	`try...catch...finally`中finally中如果有特殊代码, 可能发生意外操作
 
-	```
+	```javascript
 	function foo() {
 		try {
 			return 42;
@@ -301,7 +301,7 @@ a >= b;	// true, 因为a < b 为fasle
 	`try`正常执行, `finally`抛出错误, 最终会抛错
 
 
-	```
+	```javascript
 	function foo() {
 		try {
 			return 42;
@@ -339,7 +339,7 @@ a >= b;	// true, 因为a < b 为fasle
 	finally和try中如果都有return, finally会覆盖try的return
 
 
-	```
+	```javascript
 	function foo() {
 		bar: {
 			try {
@@ -364,7 +364,7 @@ a >= b;	// true, 因为a < b 为fasle
 	finally中的break跳出了当前代码块...
 
  - switch
-	```
+	```javascript
 	var a = "42";
 
 	switch (true) {
@@ -383,7 +383,7 @@ a >= b;	// true, 因为a < b 为fasle
 	case后面可以跟表达式, 只要跟switch的内容严格相等(===)就行
 	
 	
-	```
+	```javascript
 	var a = 10;
 
 	switch (a) {
@@ -407,7 +407,7 @@ a >= b;	// true, 因为a < b 为fasle
 ### -script标签
 变量提升只会存在于script标签内, 代码错误也只会影响当前script, 不会影响其它script的执行
 
-```
+```javascript
 <script>
   var code = "<script>alert( 'Hello World' )</script>";
 </script>
