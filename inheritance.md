@@ -1,7 +1,7 @@
 
 定义一个父类:
 
-```
+```javascript
 function Animal (name) {
 	this.name = name || 'animal';
   	this.sleep = function() {
@@ -15,7 +15,7 @@ Animal.prototype.eat = function(food) {
 
 ### call&apply 实现继承
 
-```
+```javascript
 var animal = new Animal();
 var cat = {
 	sleep: function() {
@@ -30,7 +30,7 @@ cat.sleep();
 
 ### prototype原型继承
 
-```
+```javascript
 function Cat(){ 
 }
 Cat.prototype = new Animal();
@@ -54,7 +54,7 @@ console.log(cat instanceof Cat); //true
   
 ### 原型继承变体
 
-```
+```javascript
 function Cat(){ 
 }
 Cat.prototype = Object.create(Animal.prototype);
@@ -71,7 +71,7 @@ console.log(cat instanceof Cat); //true
 
 ### 构造函数继承
 
-```
+```javascript
 function Cat(name){
 	Animal.call(this);
 	this.name = name || 'Tom';
@@ -102,7 +102,7 @@ console.log(cat instanceof Cat); // true
 
 - 实例继承/寄生继承
 
-```
+```javascript
 function Cat(name){
 	var instance = new Animal();
 	instance.name = name || 'Tom';
@@ -129,7 +129,7 @@ console.log(cat instanceof Cat); // false
 
 - 拷贝继承
 
-```
+```javascript
 function Cat(name){
 	var animal = new Animal();
 	for(var p in animal){
@@ -159,7 +159,7 @@ console.log(cat instanceof Cat); // true
 
 - 组合继承
 
-```
+```javascript
 function Cat(name){
 	Animal.call(this);
 	this.name = name || 'Tom';
@@ -184,7 +184,7 @@ console.log(cat instanceof Cat); // true
   
 - 寄生组合继承
 
-```
+```javascript
 function Cat(name){
 	Animal.call(this);
 	this.name = name || 'Tom';
@@ -208,7 +208,7 @@ console.log(cat instanceof Cat); //true
 
 - ES5写法
 
-```
+```javascript
 function Cat(name){
 	Animal.call(this);
 	this.name = name || 'Tom';
@@ -227,7 +227,7 @@ console.log(cat instanceof Cat); //true
 ### OOLO(Objects Linked to Other Objects)继承
 
 父对象:
-```
+```javascript
 var Animal = {
 	name: 'animal',
 	sleep: function() {
@@ -240,7 +240,7 @@ var Animal = {
 ```
 
 子对象:
-```
+```javascript
 var Cat = {
 	init: function(name) { this.name = name },
 	catSleep: function() {
@@ -251,18 +251,18 @@ var Cat = {
 ```
 
 父子对象继承:
-```
+```javascript
 Object.setPrototypeOf(Cat, Animal)
 ```
 
 新增子级对象:
-```
+```javascript
 cat1 = Object.create(Cat);
 cat1.init('cat');
 ```
 
 验证对象间关系:
-```
+```javascript
 Animal.isPrototypeOf(cat1);
 Cat.isPrototypeOf(cat2);
 Object.getPrototypeOf(cat1) === Cat;
@@ -277,7 +277,7 @@ Object.getPrototypeOf(cat1) === Cat;
 ### ES6 Class继承
 
 父类:
-```
+```javascript
 class Animal {
 	constructor(name) {
 		this.name = name || 'animal';
@@ -292,7 +292,7 @@ class Animal {
 ```
 
 子类:
-```
+```javascript
 class Cat extends Animal {
 	constructor(name) {
 		super(name);
@@ -305,7 +305,7 @@ class Cat extends Animal {
 ```
 
 实例化子类:
-```
+```javascript
 let cat1 = new Cat('cat1');
 let cat2 = new Cat('cat2');
 ```
