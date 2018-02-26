@@ -44,7 +44,7 @@ Object.defineProperty( myObject, "a", {
 
   值是否可改
 
-- configrable 
+- configurable 
 
   descriptor是否可改（不可以重新defineProperty, 不可delete 属性，只可以把writable从true改为false）。
 
