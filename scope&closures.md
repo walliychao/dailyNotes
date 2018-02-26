@@ -32,9 +32,12 @@
 
 - 函数作用域
 
+- 块作用域 (es6)
+
 - 命名空间
   将某个对象或函数：global, object作为命名空间
-  
+  **js没有命名空间作用域**
+  
 #### 匿名函数的优缺点
 
 优点：不污染外部命名空间，节省代码量。
@@ -45,7 +48,6 @@
 - 函数没法引用自身，arguments.callee已被淘汰。
 - 影响代码可读性。
 
-``js只有函数作用域。``
 
 例外（块作用域）：
 
@@ -73,8 +75,8 @@
   
 - 添加匿名函数作为闭包
   
-	```
-	    for (var i=1; i<=5; i++) {
+	```javascript
+	    for (var i=1; i<=5; i++) {
 	      (function(){
 		var j = i;
 		setTimeout( function timer(){
@@ -83,7 +85,7 @@
 	      })();
 	    }
 	```
-	```
+	```javascript
 	    for (var i=1; i<=5; i++) {
 	      (function(j){
 		setTimeout( function timer(){
@@ -95,7 +97,7 @@
   
  - 使用**let**, 创造block作用域
   
-	```
+	```javascript
 	    for (var i=1; i<=5; i++) {
 	      let j = i; // yay, block-scope for closure!
 	      setTimeout( function timer(){
@@ -103,7 +105,7 @@
 	      }, j*1000 );
 	    }
 	```
-	```
+	```javascript
 	  for (let i=1; i<=5; i++) {
 	    setTimeout( function timer(){
 	      console.log( i );
@@ -115,7 +117,7 @@
 
 - 简单原型
 
-	```
+	```javascript
 	  function CoolModule() {
 	    var something = "cool";
 	    var another = [1, 2, 3];
@@ -147,7 +149,7 @@
  
 	单例模式的声明和执行方法：
 
-	```
+	```javascript
 	  var foo = (function CoolModule() {
 	    var something = "cool";
 	    var another = [1, 2, 3];
@@ -172,7 +174,7 @@
 
 	内部引用返回的api，方便之后动态的修改：
 
-	```
+	```javascript
 	  var foo = (function CoolModule(id) {
 	    function change() {
 	      // modifying the public API
@@ -204,7 +206,7 @@
 
 	requirejs demo:
 
-	```
+	```javascript
 	var MyModules = (function Manager() {
 		var modules = {};
 
@@ -228,7 +230,7 @@
 
 	模块声明及执行方式：
 
-	```
+	```javascript
 	MyModules.define( "bar", [], function(){
 		function hello(who) {
 			return "Let me introduce: " + who;
