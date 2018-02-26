@@ -6,7 +6,7 @@
 
 - 默认绑定
 
-  ```
+  ```javascript
     function foo() {
       console.log( this.a );
     }
@@ -19,7 +19,7 @@
   
   **需要注意的一个细节是，只有当foo()运行在strict模式时，它的this才会是undefined，foo执行时是否是strict模式不影响。**
   
-  ```
+  ```javascript
     function foo() {
       console.log( this.a );
     }
@@ -35,7 +35,7 @@
   
 - 隐式绑定
 
-  ```
+  ```javascript
     function foo() {
       console.log( this.a );
     }
@@ -58,7 +58,7 @@
 
   - 返回callback时，原callback的this同样不会被复制。
 
-  ```
+  ```javascript
     function foo() {
       console.log( this.a );
     }
@@ -81,7 +81,7 @@
       
 - 显式绑定
 
-  ```
+  ```javascript
     function foo() {
       console.log( this.a );
     }
@@ -99,7 +99,7 @@
 
 - 强制绑定
 
-  ```
+  ```javascript
     function foo() {
       console.log( this.a );
     }
@@ -124,7 +124,7 @@
 
   ES5提供的bind函数就是一个强制绑定this的方法，下面是一个bind函数的demo：
 
-  ```
+  ```javascript
     function foo(something) {
       console.log( this.a, something );
       return this.a + something;
@@ -171,7 +171,7 @@
 
 new绑定与显式绑定不能同时存在，`new foo.call(obj1)`会报错。new绑定于强制绑定互不干涉（new操作会生成一个新的对象而不影响原来强制绑定函数的this）。
 
-```
+```javascript
   function foo(something) {
     this.a = something;
   }
@@ -199,7 +199,7 @@ new绑定与显式绑定不能同时存在，`new foo.call(obj1)`会报错。new
   
 - 箭头函数
 
-  ```
+  ```javascript
     function foo() {
       // return an arrow function
       return (a) => {
