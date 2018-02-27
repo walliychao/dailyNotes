@@ -7,27 +7,30 @@
 
 ## API
 - onclick
-`on+eventType`直接赋值给dom节点, 重新onclick会覆盖之前的属性
 
-阻止默认事件: `return false`
+    `on+eventType`直接赋值给dom节点, 重新onclick会覆盖之前的属性
+
+    阻止默认事件: `return false`
 
 - addEventListener(eventType, handler, boolean)
-可以绑定多个方法不被覆盖; 第三个参数false表示在冒泡阶段触发handler处理, true表示在捕获阶段触发; ie8以下不支持
 
-`removeEventListener`与之相对应, 解绑事件处理函数
+    可以绑定多个方法不被覆盖; 第三个参数false表示在冒泡阶段触发handler处理, true表示在捕获阶段触发; ie8以下不支持
 
-`event.preventDefault()`阻止通过addEventListener添加的事件的默认事件
+    `removeEventListener`与之相对应, 解绑事件处理函数
 
-`event.stopPropagation()`阻止事件之后的进一步传播, 包括冒泡, 捕获
+    `event.preventDefault()`阻止通过addEventListener添加的事件的默认事件
+
+    `event.stopPropagation()`阻止事件之后的进一步传播, 包括冒泡, 捕获
 
 - attachEvent('on+eventType', handler)
-ie特有, 只支持冒泡阶段触发
 
-detachEvent解绑事件
+    ie特有, 只支持冒泡阶段触发
 
-`event.returnValue = false`阻止attachEvent添加的事件的默认事件
+    detachEvent解绑事件
 
-`event.cancelBubble = true`阻止进一步冒泡
+    `event.returnValue = false`阻止attachEvent添加的事件的默认事件
+
+    `event.cancelBubble = true`阻止进一步冒泡
 
 ## 事件委托（代理）
 利用事件冒泡的特性，将里层的事件委托给外层事件，根据event对象的属性进行事件委托，改善性能。
@@ -36,28 +39,28 @@ detachEvent解绑事件
 
 原生js事件代理:
 ```javascript
-
 // ============ 简单的事件委托
 function delegateEvent(interfaceEle, selector, type, fn) {
 
     if(interfaceEle.addEventListener){
-    interfaceEle.addEventListener(type, eventfn);
-    }else{
-    interfaceEle.attachEvent("on"+type, eventfn);
+        interfaceEle.addEventListener(type, eventfn);
+    } else {
+        interfaceEle.attachEvent("on"+type, eventfn);
     }
      
     function eventfn(e){
-    var e = e || window.event;    
-    var target = e.target || e.srcElement;
-    //如果目标元素与选择器匹配则执行函数
-    if (matchSelector(target, selector)) {
+        var e = e || window.event;    
+        var target = e.target || e.srcElement;
+        //如果目标元素与选择器匹配则执行函数
+        if (matchSelector(target, selector)) {
             if(fn) {
- //将fn内部的this指向target（在此之前this都是指向的绑定事件的元素即interfaceEle）
+                //将fn内部的this指向target（在此之前this都是指向的绑定事件的元素即interfaceEle）
                 fn.call(target, e); 
             }
         }
     }
 }
+
 /**
  * only support #id, tagName, .className
  * and it's simple single, no combination
@@ -68,7 +71,7 @@ function matchSelector(ele, selector) {
     if (selector.charAt(0) === "#") {            
         return ele.id === selector.slice(1);   
     }
-      //charAt(0),返回索引为0的字符
+    //charAt(0),返回索引为0的字符
     //slice(a，b),从已有的数组或字符串返回从索引从a处开始，截取到索引b之前的子数组或子字符串；
     //如果选择器为Class
     if (selector.charAt(0) === ".") {
@@ -78,6 +81,7 @@ function matchSelector(ele, selector) {
     return ele.tagName.toLowerCase() === selector.toLowerCase();
 }
 //toLowerCase()将字符串转换成小写
+
 //调用
 var odiv = document.getElementById("oDiv");
 delegateEvent(odiv,"a","click",function(){
@@ -85,7 +89,27 @@ delegateEvent(odiv,"a","click",function(){
 })
 ```
 
-## [自定义事件创建及触发](http://www.cnblogs.com/stephenykk/p/4861420.html)
+## 自定义事件创建及触发
 
 - document.createEvent
+
+    `var evt = document.createEvent('HTMLEvents');`
+
+    方法返回新创建的对象, 参数表示事件类型:
+    
+    | 参数 | 事件接口 | 初始化方法
+    | HTMLEvents | HTMLEvent | initEvent()
+    | MouseEvents | MouseEvent | initMouseEvent()
+    | UIEvents | UIEvent | initUIEvent()
+
+- initEvent
+
+    `evt.initEvent('alert', false, false)`
+
+    根据创建的事件类型执行初始化方法, 其中initEvent支持三个参数 `initEvent(eventName, canBubble, preventDefault)`; 分别表示事件名称, 是否冒泡, 是否阻止事件的默认操作
+
 - document.dispatchEvent
+
+    `dom.addEventListener('alert', fn); dom.dispatchEvent(evt);`
+
+    首先在dom节点上绑定已经创建好的事件对应的事件名称, 用`dispatchEvent`方法触发相应事件
