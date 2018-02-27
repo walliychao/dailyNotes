@@ -212,7 +212,7 @@ bar();					// "Hello from bar!"
 ```
 
 #### tagged template
-类似一个方法, 后面的template string会作为处理成参数(strings, value)传入, tag甚至可以是一个返回一个新函数的函数调用: bar()`template ${foo}`
+类似一个方法, 后面的template string会作为处理成参数(strings, value)传入, tag甚至可以是一个返回一个新函数的函数调用: bar()\`template ${foo}\`
 ```javascript
 function foo(strings, ...values) {
 	console.log( strings );
