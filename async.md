@@ -2,10 +2,10 @@ js是以函数(function)作为最小的代码片段, 并把它们放到事件队
 
 ### Callback
 
-```
+```javascript
 ajax('post', function(success, err) {})
 ```
-```
+```javascript
 setTimeout(function() {}, 1000)
 ```
 
@@ -16,7 +16,7 @@ setTimeout(function() {}, 1000)
 
 ### Promise
 
-```
+```javascript
 var p = new Promise( function(resolve,reject){
 	resolve( "A" );
 } );
@@ -46,7 +46,7 @@ p.then(function(a) {
 
 #### promisify & thunkify
 
-```
+```javascript
 function promisify(fn) {
 	return function() {
 		var args = [].slice.call( arguments );
@@ -66,7 +66,7 @@ function promisify(fn) {
 	};
 }
 ```
-```
+```javascript
 function thunkify(fn) {
 	return function() {
 		var args = [].slice.call( arguments );
@@ -83,7 +83,7 @@ function thunkify(fn) {
 - promisify也可以实现柯里化, 把调用时传入的参数固化下来, 作为之后函数调用时参数的一部分
 
 使用形式:
-```
+```javascript
 // symmetrical: constructing the question asker
 var fooThunkory = thunkify( foo );
 var fooPromisory = promisify( foo );
@@ -117,7 +117,7 @@ co的实现就是基于thunkify, 之后作者在转向promise实现
 
 ### Generator
 
-```
+```javascript
 function *foo(x) {
 	var y = x * (yield "Hello");	// <-- yield a value!
 	return y;
@@ -138,7 +138,7 @@ generator把原先原子化执行的函数(function)转化成了代码执行片�
 
 #### yield delegation
 
-```
+```javascript
 function *foo() {
 	console.log( "`*foo()` starting" );
 	yield 3;
@@ -170,7 +170,7 @@ it.next().value;	// `*foo()` finished
 
 ### callback + generator
 
-```
+```javascript
 function foo(x,y) {
 	ajax(
 		"http://some.url.1/?x=" + x + "&y=" + y,
@@ -187,7 +187,7 @@ function foo(x,y) {
 	);
 }
 ```
-```
+```javascript
 function *main() {
 	try {
 		var text = yield foo( 11, 31 );
@@ -207,7 +207,7 @@ it.next();
 
 ### promise + generator
 
-```
+```javascript
 function foo(x,y) {
 	return request(
 		"http://some.url.1/?x=" + x + "&y=" + y
@@ -223,7 +223,7 @@ function *main() {
 	}
 }
 ```
-```
+```javascript
 var it = main();
 var p = it.next().value;
 // wait for the `p` promise to resolve
@@ -242,7 +242,7 @@ p.then(
 
 ### promise + generator + runner
 
-```
+```javascript
 function run(gen) {
 	var args = [].slice.call( arguments, 1), it;
 
@@ -285,7 +285,7 @@ function run(gen) {
 		} );
 }
 ```
-```
+```javascript
 function *main() {
 	// ..
 }
@@ -299,7 +299,7 @@ run( main );
 
 ### async + await
 
-```
+```javascript
 async function request(url) {
 	var resp = await (
 		new Promise( function(resolve,reject){
