@@ -61,18 +61,12 @@ function delegateEvent(interfaceEle, selector, type, fn) {
     }
 }
 
-/**
- * only support #id, tagName, .className
- * and it's simple single, no combination
- */
 //比较函数：判断事件的作用目标是否与选择器匹配；匹配则返回true
 function matchSelector(ele, selector) {
     // 如果选择器为ID
     if (selector.charAt(0) === "#") {            
         return ele.id === selector.slice(1);   
     }
-    //charAt(0),返回索引为0的字符
-    //slice(a，b),从已有的数组或字符串返回从索引从a处开始，截取到索引b之前的子数组或子字符串；
     //如果选择器为Class
     if (selector.charAt(0) === ".") {
         return (" " + ele.className + " ").indexOf(" " + selector.slice(1) + " ") != -1;
@@ -97,10 +91,11 @@ delegateEvent(odiv,"a","click",function(){
 
     方法返回新创建的对象, 参数表示事件类型:
     
-    | 参数 | 事件接口 | 初始化方法
-    | HTMLEvents | HTMLEvent | initEvent()
-    | MouseEvents | MouseEvent | initMouseEvent()
-    | UIEvents | UIEvent | initUIEvent()
+    参数 | 事件接口 | 初始化方法
+    -----|---------|----------
+    HTMLEvents | HTMLEvent | initEvent()
+    MouseEvents | MouseEvent | initMouseEvent()
+    UIEvents | UIEvent | initUIEvent()
 
 - initEvent
 
