@@ -48,8 +48,10 @@ foo();		// ??
 ### Spread/Rest
 ```javascript
 function foo(...args) {  // rest, gather
-	console.log( args ); // spread
+	console.log( ...args ); // spread
 }
+
+foo(1,2,3,4,5);  // 1 2 3 4 5
 ```
 
 ### function默认参数
