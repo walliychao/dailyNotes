@@ -14,7 +14,7 @@
 
 ### LHS&RHS
 - LHS: left hand search, 赋值操作符左侧查找，即引用查找
-- RHS: right hand search, 复制操作符右侧查找，即值查找
+- RHS: right hand search, 赋值操作符右侧查找，即值查找
 
 `js引擎跟作用域的交互基本可以归结为值查找和引用查找。`
 
