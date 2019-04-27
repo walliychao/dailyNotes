@@ -121,7 +121,7 @@ ES6的`Array.from({length: 3})`可以生成一个每个元素都有值(undefined
 	```javascript
 	var s1 = Symbol( "cool" );
 	String( s1 );					// "Symbol(cool)"
-	s` + "";						// TypeError
+	s1 + "";						// TypeError
 	```
 
 Symbol可以显示转化为string, 但不能隐式转; 不可以转成Number, 会报错; 可以转成Boolean(true)
