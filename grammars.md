@@ -15,8 +15,9 @@ typeof NaN === 'number'
 var a
 typeof a === 'undefined'
 typeof b === 'undefined'
+typeof undefined === 'undefined'
 ```
-未声明和未赋值的变量typeof都是undefined
+未声明和未赋值的变量typeof都是undefined; `undefined`的typeof也是undefined
 
 ### -hoist
 ```javascript
@@ -35,8 +36,13 @@ a; // referenceError
 
 如果用var定义, 即使未执行if内的语句, 也会进行变量提升
 
-### -undefined
-`undefined`是一个内置的变量, 默认值就是undefined
+### -`undefined` vs. `null` vs. `void 0`
+
+undefined和null本身是一个基本数据类型, 只有一个值就是自身; void是一个运算符, 可以使任何表达式返回undefined
+
+**undefined**: 是一个内置的变量, 默认值就是undefined; typeof undefined === 'undefined'
+
+表示声明未赋值, 函数未返回值或未传参时默认返回, 可以作为局部变量被重写(var undefined = '123')
 
 在non-strict模式下可以改变全局的undefined值, strict模式下不可以
 ```javascript
@@ -53,10 +59,18 @@ function foo() {
 	console.log( undefined ); // 2
 }
 ```
-
 **绝对不要改undefined值!!**
 
-`void`可以把任何表达式的值变成undefined 返回
+**null**: 表示一个空对象指针, typeof null === 'object'
+
+在需要解除一个变量的对象引用时使用, 下次垃圾回收时该变量所占用内存可以被回收
+
+*console.log 的对象不会被垃圾回收*
+
+**void 0**: void运算符对给定的表达式进行求值，然后返回undefined(可以把任何表达式的值变成undefined返回);
+
+因为undefined可以被重写, 所以希望返回原始值undefined的地方可以赋值 void 0
+
 ```javascript
 void 0      // undefined
 void 3+4    // undefined
