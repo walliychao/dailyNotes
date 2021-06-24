@@ -158,18 +158,34 @@
     当一个函数作为构造函数被调用时，以下会发生：
 
     - 一个新的对象会被创建
-
     - 这个函数以及它的原型链会被添加这个新对象的原型(prototype)上
-
     - 这个新创建的对象会被设定为函数构造调用时的的this值
-
     - 除非这个函数特意返回一个它自己创建的对象，否则函数会默认返回这个新创建的对象作为返回值
+    - 如果这个函数返回一个原始值的话, this指向不变, 还是原来创建的对象
 
+    ```javascript
+      function Foo(){
+        this.user = "Lucas"
+        const o = {}
+        return o
+      }
+      const instance = new Foo()  // 返回对象`o`
+      console.log(instance.user) //  undefined
+      
+      function Foo(){
+        this.user = "Lucas"
+        return 1
+      }
+      const instance = new Foo()
+      console.log(instance.user)  // Lucas
+       
+    ```
+  
 #### 执行顺序
 
 `强制绑定 == 显式绑定 > 隐式绑定 > 默认绑定`
 
-new绑定与显式绑定不能同时存在，`new foo.call(obj1)`会报错。new绑定于强制绑定互不干涉（new操作会生成一个新的对象而不影响原来强制绑定函数的this）。
+new绑定与显式绑定不能同时存在，`new foo.call(obj1)`会报错。new绑定与强制绑定互不干涉（new操作会生成一个新的对象而不影响原来强制绑定函数的this）。
 
 ```javascript
   function foo(something) {
