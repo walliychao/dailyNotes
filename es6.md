@@ -9,7 +9,7 @@ let, const 声明的变量只在当前块作用域下有效, 提前使用还未�
 	if (typeof a === "undefined") {
 		console.log( "cool" );
 	}
-	// `b` is declared, but in its TDZ
+	// `b` is declared, but in its TDZ(temporal death zone)
 	if (typeof b === "undefined") {		// ReferenceError!
 		// ..
 	}
@@ -25,6 +25,14 @@ let, const 声明的变量只在当前块作用域下有效, 提前使用还未�
 	console.log( a );		// [1,2,3,4]
 	a = 42;					// TypeError!
 }
+```
+
+- `let`, `const`声明的变量在最外层不会挂载在window下
+```javascript
+	const a = 2;
+	let b = 3;
+	var c = 5;
+	window.a, window.b, window.c;	// undefined undefined 5
 ```
 
 - 块作用域函数: 在ES6中, 所有在代码块中定义的函数都只存在于块作用域中
