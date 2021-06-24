@@ -249,10 +249,24 @@ a >= b;	// true, 因为a < b 为fasle
 	```javascript
 	var b = 3;
 	function foo( a = 42, b = a + b + 5 ) {
-		// ..
+		// Uncaught ReferenceError: b is not defined
 	}
 	```
-	error, ES6的函数参数默认值是let声明的, `b = a+b+5`在使用b时是没有声明的; 参数传undefined时跟没有传参一样效果, 会使用默认值, 但arguments对象长度会有差别
+	error, ES6的函数参数默认值是let声明的, `b = a+b+5`在使用b时是没有声明的; 函数内部不可以再用let声明相同的变量, 但可以用var重复声明, 且可以正常传值
+	
+	```javascript
+	function foo(arg1) {
+	   let arg1  // Uncaught SyntaxError: Identifier 'arg1' has already been declared
+	}
+	
+	function foo(arg1) {
+	   var arg1  // 'arg1'
+	}
+
+	foo('arg1')
+	```
+	
+	参数传undefined时跟没有传参一样效果, 会使用默认值, 但arguments对象长度会有差别
 	
 	```javascript
 	function foo(a) {
