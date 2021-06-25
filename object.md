@@ -77,7 +77,7 @@ Object.defineProperty( myObject, "a", {
 
     检查对象是否可扩展
 
-**Getters&&Setters**
+**getter & setter**
 
 定义`get`或`set`函数后, 属性的value和writable特性会被忽略。
 
@@ -103,6 +103,16 @@ Object.defineProperty( myObject, "a", {
 
 ### prototype
 
+**__proto__**（隐式原型）vs **prototype**（显式原型）
+
+显式原型: 每一个函数在创建之后都会拥有一个名为prototype的属性，这个属性指向函数的原型对象; 通过Function.prototype.bind方法构造出来的函数是个例外，它没有prototype属性
+
+隐式原型: JavaScript中任意对象都有一个内置属性[[prototype]]，在ES5之前没有标准的方法访问这个内置属性，但是大多数浏览器都支持通过__proto__来访问。ES5中有了对于这个内置属性标准的Get方法Object.getPrototypeOf()
+
+隐式原型指向创建这个对象的函数(constructor)的prototype
+
+**property in prototype**
+
 修改属性时的查找规则:
 
 1. 如果一个普通value属性foo存在于原型链上, 且非只读(writable: true), 则会在当前对象上创建一个新属性foo并覆盖(shadow)原有属性
@@ -114,7 +124,7 @@ Object.defineProperty( myObject, "a", {
 
 **Object.create**
 
-`Object.create(a)`返回一个新对象, 其原型指向a.prototype, `Object.create(null)`会生成一个原型为空的对象
+`Object.create(a)`返回一个新对象, 其原型指向a.__proto__, `Object.create(null)`会生成一个原型为空的对象
 
 polyfill:
 
@@ -130,7 +140,7 @@ if (!Object.create) {
 
 **get & set prototype**
 
-`a.__proto__` <=> `Object.getPrototypeOf( a )` 返回a.prototype
+`a.__proto__` <=> `Object.getPrototypeOf( a )` 返回a的原型属性
 
 `Bar.prototype = Object.create( Foo.prototype )` <=> `Object.setPrototypeOf( Bar.prototype, Foo.prototype )`
 
