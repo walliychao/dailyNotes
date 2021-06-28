@@ -124,7 +124,9 @@ Object.defineProperty( myObject, "a", {
 
 **Object.create**
 
-`Object.create(a)`返回一个新对象, 其原型指向a的原型, `Object.create(null)`会生成一个原型为空的对象
+`Object.create(a)`返回一个新对象, 其原型指向a, `Object.create(null)`会生成一个原型为空的对象, 可以传第二个参数`definedProperty`定义对象属性
+
+而`new Func()`创建的对象是以Func作为构造函数`constructor`, 其原型是Func的原型
 
 polyfill:
 
@@ -137,6 +139,32 @@ if (!Object.create) {
 	};
 }
 ```
+
+```javascript
+var MyClass1 = function() {
+  this.member1 = "m1";
+};
+ 
+MyClass1.prototype.function1 = function() {
+  return "return from function1";
+};
+ 
+var instance1 = new MyClass1();
+var instance2 = Object.create(MyClass1.prototype, {
+  "member2": {
+    value: "m2",
+    writable: true
+  }});
+ 
+console.log("instance1.member1: "+ instance1.member1);//m1
+console.log("instance1.function1: "+ instance1.function1());//return from function1
+console.log("instance2.member1: "+ instance2.member1);//undefined
+console.log("instance2.member2: "+ instance2.member2);//m2
+console.log("instance2.function1: "+ instance2.function1());//return from function1
+console.log("instance1.member2: "+ instance1.member2);//undefined
+
+```
+用`new`创建的对象instance1会执行构造函数, 所以有member1属性; 用`object.create`创建的对象instance2只继承了构造函数的原型, 但是传入了属性定义, 所以有member2但是没有member1属性
 
 **get & set prototype**
 
