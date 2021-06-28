@@ -250,6 +250,8 @@ a >= b;	// true, 因为a < b 为fasle
 
 比较时首先将两边转换成原始值, 如果一边存在null或undefined则直接返回false, 如果两边都是string则按字典顺序比较, 如果类型不同则转换成数字进行比较
 
+**[运算符优先级](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Operator_Precedence)**
+
 ### -quirks
 - 连等问题
 	```javascript
