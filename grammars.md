@@ -250,7 +250,36 @@ a >= b;	// true, 因为a < b 为fasle
 
 比较时首先将两边转换成原始值, 如果一边存在null或undefined则直接返回false, 如果两边都是string则按字典顺序比较, 如果类型不同则转换成数字进行比较
 
-**[运算符优先级](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Operator_Precedence)**
+### - [运算符优先级](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Operator_Precedence)
+```javascript
+var a = 10;
+function f1() {
+    a = 10000;
+    return 1;
+}
+function f2() {
+    return a;
+}
+function f3() {
+    return 3;
+}
+console.log(f1() + f2() * f3()) // 30001
+
+var i = 1;
+var obj = {};
+function f1() {
+    console.log(1);
+    i = 10;
+    return 5;
+}
+function f2() {
+    console.log(2);
+    return i;
+}
+obj[f1()] = obj[f2()] = 999;
+console.log(obj[1], obj[5], obj[10]);  // 1 2  undefined 999 999
+```
+这里js先从左到右对函数表达式求值, 然后再按运算符优先级进行计算, 即使从右到左结合的表达式也是先从左到右求值再运算...
 
 ### -quirks
 - 连等问题
