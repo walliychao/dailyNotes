@@ -44,6 +44,114 @@ p.then(function(a) {
 - then() & catch(): 每个promise对象都可以用`then`注册`fullfilled`或`rejected`状态时的处理方法; `catch`相当于then(null, ..); then或catch方法都会返回一个新的promise对象方便链式调用. 如果不传参数或参数不是一个方法时会有默认的处理方法, fullfill回调默认把数据传给下一个then注册的回调, reject回调也会把错误传给下一个
 - Promise.all([..]) & Promise.race([..]): 数组中需要传promise对象或thenable对象, 最终会转化成合法的promise对象, `promise.all`在所有成员都`fullfilled`时才会变成`fullfilled`状态, 任何一个成员`rejected`就会变成`rejected`状态; `promise.race`相反, 任何一个成员`fullfilled`即变成`fullfilled`状态, 只有所有成员都`rejected`的时候才会变成`rejected`状态
 
+**promise 代码实现**
+```javascript
+var Promise = function(callback) {
+    this.successFns = [];
+    this.errorFns = [];
+    this.state = 'pending';
+    var resolve = res => {   // resolve和reject需要保留外层this值
+        if (res instanceof Promise) {
+            return res.then(resolve, reject);
+        }
+        // 保证resolve和reject异步调用, 实际应该使用MutationObserver实现微任务
+        setTimeout(() => {  
+            this.state = 'fulfilled';
+            this.value = res;
+            this.successFns.forEach(fn => fn(res));
+        })
+    }
+    var reject = err => {
+        setTimeout(() => {
+            this.state = 'rejected';
+            this.value = err;
+            this.errorFns.forEach(fn => fn(err));
+        })
+    }
+    try {
+        callback(resolve, reject);
+    } catch (e) {
+        reject(e);
+    }
+};
+Promise.prototype.then = function(successFn, errorFn) {
+    var self = this;
+    successFn = typeof successFn === 'function' ? successFn : data => data;
+    errorFn = typeof errorFn === 'function' ? errorFn : data => data;
+    return new Promise(function(resolve, reject) {
+        switch(self.state) {
+            case 'fulfilled':
+                return new Promise((resolve, reject) =>
+                    resolve(successFn(self.value)));
+                break;
+            case 'rejected':
+                return new Promise((resolve, reject) =>
+                    resolve(errorFn(self.value)));
+                break;
+            default:
+                return new Promise((resolve, reject) => {
+                    self.successFns.push(function(res) {
+                        resolve(successFn(res));
+                    });
+                    self.errorFns.push(function(res) {
+                        resolve(errorFn(res));
+                    });
+                });
+                
+        }
+    })
+}
+Promise.prototype.catch = function(errorFn) {
+    return this.then(null, errorFn)
+};
+Promise.prototype.resolve = function(value) {
+    return new Promise((resolve, reject) => {
+        resolve(value);
+    })
+}
+Promise.prototype.reject = function(value) {
+    return new Promise((resolve, reject) => {
+        reject(value);
+    })
+}
+Promise.prototype.all = function(promiseArray) {
+    return new Promise((resolve, reject) => {
+        try {
+            let resultArray = Array.from({length});
+            const length = promiseArray.length;
+            for (let i = 0;;i++) {
+                promiseArray[i].then(data => {
+                    resultArray[i] = data;
+                    if (resultArray.length === length) {
+                        resolve(resultArray);
+                    }
+                }, reject);
+            }
+        } catch(e) {
+            reject(e);
+        }
+    })
+}
+Promise.prototype.race = function(promiseArray) {
+    return new Promise((resolve, reject) => {
+        try {
+            let rejectArray = [];
+            const length = promiseArray.length;
+            for (let i = 0;;i++) {
+                promiseArray[i].then(resolve, err => {
+                    rejectArray.push(err);
+                    if (rejectArray.length === length) {
+                        reject();
+                    }
+                });
+            }
+        } catch(e) {
+            reject(e);
+        }
+    })
+}
+```
+
 #### promisify & thunkify
 
 ```javascript
