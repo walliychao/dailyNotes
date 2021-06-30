@@ -44,7 +44,7 @@ p.then(function(a) {
 - then() & catch(): 每个promise对象都可以用`then`注册`fullfilled`或`rejected`状态时的处理方法; `catch`相当于then(null, ..); then或catch方法都会返回一个新的promise对象方便链式调用. 如果不传参数或参数不是一个方法时会有默认的处理方法, fullfill回调默认把数据传给下一个then注册的回调, reject回调也会把错误传给下一个
 - Promise.all([..]) & Promise.race([..]): 数组中需要传promise对象或thenable对象, 最终会转化成合法的promise对象, `promise.all`在所有成员都`fullfilled`时才会变成`fullfilled`状态, 任何一个成员`rejected`就会变成`rejected`状态; `promise.race`相反, 任何一个成员`fullfilled`即变成`fullfilled`状态, 只有所有成员都`rejected`的时候才会变成`rejected`状态
 
-**promise 代码实现**
+#### promise 代码实现
 ```javascript
 var Promise = function(callback) {
     this.successFns = [];
@@ -222,6 +222,49 @@ fooPromise
 );
 ```
 co的实现就是基于thunkify, 之后作者在转向promise实现
+
+#### promise + reduce
+
+按顺序执行异步函数并打印结果
+```javascript
+let array = Array.from({length: 5}, () => {
+      return (Math.random() * 10000) | 0
+  })
+const textPromiseFuncs = array.map((v, i) => {
+    return function() {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => resolve(i + '  ' + v), v)
+        })
+    }
+});
+// log them in order
+textPromiseFuncs.reduce((chain, textPromiseFunc) => {
+    return chain.then(textPromiseFunc)
+    .then(text => console.log(text));
+}, Promise.resolve());
+```
+结果按序号依次打印:
+```
+0  1484
+1  4070
+2  6546
+3  8000
+4  9251
+```
+上面的代码是串行执行, 如果需要并行执行则直接创建promise数组
+```javascript
+const textPromises = array.map((v, i) => {
+    return new Promise((resolve, reject) => {
+	setTimeout(() => resolve(i + '  ' + v), v)
+    })
+});
+// log them in order
+textPromises.reduce((chain, textPromise) => {
+    return chain.then(() => textPromise)
+    .then(text => console.log(text));
+}, Promise.resolve());
+```
+这样promise在数组map执行时即并行开始执行
 
 ### Generator
 
