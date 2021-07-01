@@ -125,10 +125,12 @@ Promise.prototype.all = function(promiseArray) {
         try {
             let resultArray = Array.from({length});
             const length = promiseArray.length;
+            let received = 0;
             for (let i = 0;;i++) {
                 promiseArray[i].then(data => {
                     resultArray[i] = data;
-                    if (resultArray.length === length) {
+                    received++;
+                    if (received === length) {
                         resolve(resultArray);
                     }
                 }, reject);
@@ -143,11 +145,13 @@ Promise.prototype.race = function(promiseArray) {
         try {
             let rejectArray = [];
             const length = promiseArray.length;
+            let rejected = 0;
             for (let i = 0;;i++) {
                 promiseArray[i].then(resolve, err => {
-                    rejectArray.push(err);
-                    if (rejectArray.length === length) {
-                        reject();
+                    rejectArray[i] = err;
+                    rejected++;
+                    if (rejected === length) {
+                        reject(rejectArray);
                     }
                 });
             }
