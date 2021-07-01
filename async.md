@@ -273,10 +273,14 @@ textPromises.reduce((chain, textPromise) => {
     return chain.then(() => textPromise)
     .then(text => console.log(text));
 }, Promise.resolve());
-// 或者使用Promise.all
+```
+这样promise在数组map执行时即并行开始执行, 使用`Promise.all`也可以实现并行执行异步请求但顺序打印
+```javascript
 Promise.all(textPromises).then(resolveArray => console.log(resolveArray.join('\n')))
 ```
-这样promise在数组map执行时即并行开始执行
+> 与使用reduce的区别在于`Promise.all`需要等到所有promise都resolve之后一次性返回结果数组,
+> 而reduce在promise1返回时即打印结果, promise2返回时假设promise3已经返回, 则promise2和promise3都会打印
+> 因此用reduce是效率最高的方式
 
 ### Generator
 
