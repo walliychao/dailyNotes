@@ -44,6 +44,12 @@ p.then(function(a) {
 - then() & catch(): 每个promise对象都可以用`then`注册`fullfilled`或`rejected`状态时的处理方法; `catch`相当于then(null, ..); then或catch方法都会返回一个新的promise对象方便链式调用. 如果不传参数或参数不是一个方法时会有默认的处理方法, fullfill回调默认把数据传给下一个then注册的回调, reject回调也会把错误传给下一个
 - Promise.all([..]) & Promise.race([..]): 数组中需要传promise对象或thenable对象, 最终会转化成合法的promise对象, `promise.all`在所有成员都`fullfilled`时才会变成`fullfilled`状态, 任何一个成员`rejected`就会变成`rejected`状态; `promise.race`相反, 任何一个成员`fullfilled`即变成`fullfilled`状态, 只有所有成员都`rejected`的时候才会变成`rejected`状态
 
+```javascript
+promise.then(func1, func2)
+promise.then(func1).catch(func2)
+```
+区别: 第一行代码`func1`与`func2`只有一个会执行, 如果`func1`执行出错则没有地方处理; 第二行中不论`promise`还是`func1`抛错都有兜底函数`func2`处理
+
 #### promise 代码实现
 ```javascript
 var Promise = function(callback) {
