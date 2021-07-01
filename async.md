@@ -239,7 +239,7 @@ co的实现就是基于thunkify, 之后作者在转向promise实现
 ```javascript
 let array = Array.from({length: 5}, () => {
       return (Math.random() * 10000) | 0
-  })
+})
 const textPromiseFuncs = array.map((v, i) => {
     return function() {
         return new Promise((resolve, reject) => {
@@ -273,6 +273,8 @@ textPromises.reduce((chain, textPromise) => {
     return chain.then(() => textPromise)
     .then(text => console.log(text));
 }, Promise.resolve());
+// 或者使用Promise.all
+Promise.all(textPromises).then(resolveArray => console.log(resolveArray.join('\n')))
 ```
 这样promise在数组map执行时即并行开始执行
 
