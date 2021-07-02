@@ -501,7 +501,8 @@ pr.then(
 );
 ```
 
-- `main()`返回一个promise对象, promise`fullfilled`时会自动执行generator下一步, 即`resolve(xhr)`执行时xhr会传到`var resp = await ...`处, 而不是main的then方法里
-- main方法的`return resp.responseText`会传到main返回的promise对象的then方法中作为fullfilled方法的参数
+- `request()`返回一个promise对象, promise`fullfilled`时会自动执行generator下一步, 即`resolve(xhr)`执行时xhr会传到`var resp = await ...`处, 而不是main的then方法里
+- request方法`return resp.responseText`会传到main返回的promise对象的then方法中作为fullfilled方法的参数
 - async方法会在promise `resolve`时自动执行下一步代码直到结束, 并且返回值会传给async返回的promise对象的then方法中, 相当于 promise + generator + runner的语法糖
 
+async方法一定会返回一个promise, 这个promise会以函数的返回值resolve, 会以函数的抛错reject
