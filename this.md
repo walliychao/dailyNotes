@@ -236,7 +236,7 @@ new绑定与显式绑定不能同时存在，`new foo.call(obj1)`会报错。new
     bar.call( obj2 ); // 2, not 3!
   ```
   
-  箭头函数的this是词法作用域里的this，相当于 var self = this; ((this) => {})(self); 与执行上下文的this不同。
+  箭头函数的this是词法作用域里的this，相当于 var self = this; ((this) => {})(self); 与执行上下文的this不同。call, apply, bind等显示绑定也不能改变this指向
   
   建议词法作用域和执行上下文指定this只使用一种形式，否则会产生混乱。
   
