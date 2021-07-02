@@ -105,11 +105,30 @@ Object.defineProperty( myObject, "a", {
 
  **\___proto___**（隐式原型）vs **prototype**（显式原型）
 
-显式原型: 每一个函数在创建之后都会拥有一个名为prototype的属性，这个属性指向函数的原型对象
+显式原型: 每一个**函数**在创建之后都会拥有一个名为prototype的属性，这个属性指向函数的原型对象, 只有函数有prototype属性
 
-隐式原型: JavaScript中任意对象都有一个内置属性[[prototype]]，在ES5之前没有标准的方法访问这个内置属性，但是大多数浏览器都支持通过__proto__来访问。ES5中有了对于这个内置属性标准的Get方法Object.getPrototypeOf()
+隐式原型: JavaScript中**任意对象**都有一个内置属性[[prototype]]，在ES5之前没有标准的方法访问这个内置属性，但是大多数浏览器都支持通过__proto__来访问。ES5中有了对于这个内置属性标准的Get方法Object.getPrototypeOf(), 隐式原型指向创建这个对象的函数(constructor)的prototype
 
-隐式原型指向创建这个对象的函数(constructor)的prototype
+隐式原型构成了对象的原型链, 显示原型在函数作为构造函数时使用
+
+```javascript
+function Animal (name) {
+	this.name = name || 'animal';
+  	this.sleep = function() {
+    		console.log(this.name + ' is sleeping');
+  	}
+}
+
+function Cat(){
+    Animal.call(this);
+}
+Cat.prototype = Object.create(Animal.prototype);
+Object.setPrototypeOf(Cat, Animal);
+
+console.log(Cat.prototype); // Animal {}
+console.log(Object.getPrototypeOf(Cat));  // f Animal(name) {....}
+console.log(Cat.__proto__);   // f Animal(name) {....}
+```
 
 **property in prototype**
 
