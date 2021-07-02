@@ -214,6 +214,8 @@ function Cat(name){
 	this.name = name || 'Tom';
 }
 Cat.prototype = Object.create(Animal.prototype);
+// 继承Animal上的静态方法和属性
+Object.setPrototypeOf(Cat, Animal);
 
 // Test Code
 var cat = new Cat();
