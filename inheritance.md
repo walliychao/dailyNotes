@@ -209,17 +209,22 @@ console.log(cat instanceof Cat); //true
 - ES5写法
 
 ```javascript
+Animal.isAlive = true;
+
 function Cat(name){
-	Animal.call(this);
+	Animal.call(this);  // 继承Animal实例属性 eat
 	this.name = name || 'Tom';
 }
+// new Cat() 时实例对象继承Animal原型上的属性 eat 
 Cat.prototype = Object.create(Animal.prototype);
-// 继承Animal上的静态方法和属性
+// 继承Animal上的静态方法和属性(Cat.__proto__ = Animal) isAlive
 Object.setPrototypeOf(Cat, Animal);
 
 // Test Code
 var cat = new Cat();
 console.log(cat.sleep());
+console.log(cat.eat());
+console.log(Cat.isAlive);    // true
 console.log(cat instanceof Animal); // true
 console.log(cat instanceof Cat); //true
 ```
