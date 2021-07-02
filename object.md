@@ -122,7 +122,10 @@ function Animal (name) {
 function Cat(){
     Animal.call(this);
 }
+// Cat.prototype是以Animal函数原型(prototype)为原型创建的对象
+// Cat.prototype.__proto__是Animal的构造函数的原型(prototype)即内置Function函数的原型
 Cat.prototype = Object.create(Animal.prototype);
+// Cat.__proto__指向Animal
 Object.setPrototypeOf(Cat, Animal);
 
 console.log(Cat.prototype); // Animal {}
