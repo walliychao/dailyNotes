@@ -180,28 +180,6 @@
       console.log(instance.user)  // Lucas
        
     ```
-  
-#### 执行顺序
-
-`强制绑定 == 显式绑定 > 隐式绑定 > 默认绑定`
-
-new绑定与显式绑定不能同时存在，`new foo.call(obj1)`会报错。new绑定与强制绑定互不干涉（new操作会生成一个新的对象而不影响原来强制绑定函数的this）。
-
-```javascript
-  function foo(something) {
-    this.a = something;
-  }
-
-  var obj1 = {};
-
-  var bar = foo.bind( obj1 );
-  bar( 2 );
-  console.log( obj1.a ); // 2
-
-  var baz = new bar( 3 );
-  console.log( obj1.a ); // 2
-  console.log( baz.a ); // 3
-```
 
 #### 可能的意外
 
@@ -240,7 +218,27 @@ new绑定与显式绑定不能同时存在，`new foo.call(obj1)`会报错。new
   
   建议词法作用域和执行上下文指定this只使用一种形式，否则会产生混乱。
   
-  
+  #### 整体优先级
+
+箭头函数`() => {}` **>>** 构造函数`new` **>>** 强制绑定`bind` **>>** 显示绑定`call, apply` **>>** 隐式绑定`obj.func()` **>>** 默认绑定
+
+new调用不能改变箭头函数的this; new绑定与显式绑定不能同时存在，`new foo.call(obj1)`会报错。new绑定与强制绑定互不干涉（new操作会生成一个新的对象而不影响原来强制绑定函数的this）。
+
+```javascript
+  function foo(something) {
+    this.a = something;
+  }
+
+  var obj1 = {};
+
+  var bar = foo.bind( obj1 );
+  bar( 2 );
+  console.log( obj1.a ); // 2
+
+  var baz = new bar( 3 );
+  console.log( obj1.a ); // 2
+  console.log( baz.a ); // 3
+```
 
 
 
