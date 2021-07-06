@@ -143,17 +143,11 @@ Promise.prototype.all = function(promiseArray) {
 Promise.prototype.race = function(promiseArray) {
     return new Promise((resolve, reject) => {
         try {
-            let rejectArray = [];
-            const length = promiseArray.length;
-            let rejected = 0;
             for (let i = 0;;i++) {
-                promiseArray[i].then(resolve, err => {
-                    rejectArray[i] = err;
-                    rejected++;
-                    if (rejected === length) {
-                        reject(rejectArray);
-                    }
-                });
+                promiseArray[i].then(data => 
+                    resolve(data), err => 
+                    reject(err)
+                );
             }
         } catch(e) {
             reject(e);
