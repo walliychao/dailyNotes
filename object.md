@@ -122,9 +122,16 @@ function Animal (name) {
 function Cat(){
     Animal.call(this);
 }
+
 // Cat.prototype是以Animal函数原型(prototype)为原型创建的对象
 // Cat.prototype.__proto__是Animal的构造函数的原型(prototype)即内置Function函数的原型
 Cat.prototype = Object.create(Animal.prototype);
+
+let cat = new Cat();  
+cat.__proto__.constructor === Animal  // true
+Animal.prototype.constructor === Cat.prototype.constructor === cat.constructor === Animal  // true
+cat.__proto__ === Cat.prototype   // true
+
 // Cat.__proto__指向Animal
 Object.setPrototypeOf(Cat, Animal);
 
@@ -203,6 +210,8 @@ console.log("instance1.member2: "+ instance1.member2);//undefined
 假如Foo是一个bind返回函数, 即 `Foo = bar.bind(this)`, 则Foo.prototype 实际上等于 bar.prototype, a instanceOf Foo 实际上判断的是a是否是bar的实例
 
 `Foo.prototype.isPrototypeOf( a )` 与上面的效果相同, `b.isPrototypeOf(a)` 可以测试两个对象之间的关系
+
+
 
 ### ES6 Meta Property
 
