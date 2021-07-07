@@ -211,6 +211,19 @@ console.log("instance1.member2: "+ instance1.member2);//undefined
 
 `Foo.prototype.isPrototypeOf( a )` 与上面的效果相同, `b.isPrototypeOf(a)` 可以测试两个对象之间的关系
 
+### ES6 Class
+Class定义的类是构造函数, 必须通过`new`调用
+```javascript
+class Point {
+  // ...
+}
+
+typeof Point // "function"
+Point === Point.prototype.constructor // true
+```
+
+类的内部定义的所有方法，都是不可枚举的（non-enumerable）,与ES5 prototype定义方法不同
+
 
 
 ### ES6 Meta Property
