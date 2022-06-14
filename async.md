@@ -95,15 +95,12 @@ Promise.prototype.then = function(successFn, errorFn) {
                     resolve(errorFn(self.value)));
                 break;
             default:
-                return new Promise((resolve, reject) => {
-                    self.successFns.push(function(res) {
-                        resolve(successFn(res));
-                    });
-                    self.errorFns.push(function(res) {
-                        resolve(errorFn(res));
-                    });
-                });
-                
+		self.successFns.push(function(res) {
+		    resolve(successFn(res));
+		});
+		self.errorFns.push(function(res) {
+		    resolve(errorFn(res));
+		});
         }
     })
 }
